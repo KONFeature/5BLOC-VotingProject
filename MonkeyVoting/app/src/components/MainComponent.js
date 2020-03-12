@@ -37,16 +37,12 @@ export default ({ drizzle, drizzleState }) => {
           <ContractData
             drizzle={drizzle}
             drizzleState={drizzleState}
-            contract="SimpleStorage"
-            method="storedData"
+            contract="Ballot"
+            method="winnerName"
           />
         </p>
 
-        <Button variant="contained" color="primary">
-      Hello World
-    </Button>
-
-        <ContractForm drizzle={drizzle} contract="SimpleStorage" method="set" />
+        <ContractForm drizzle={drizzle} contract="Ballot" method="giveRightToVote" />
       </div>
 
       <div className="section">
@@ -59,7 +55,7 @@ export default ({ drizzle, drizzleState }) => {
         </p>
         <p>
           <strong>Total Supply: </strong>
-          <ContractData
+          {/* <ContractData
             drizzle={drizzle}
             drizzleState={drizzleState}
             contract="TutorialToken"
@@ -72,28 +68,28 @@ export default ({ drizzle, drizzleState }) => {
             contract="TutorialToken"
             method="symbol"
             hideIndicator
-          />
+          /> */}
         </p>
         <p>
           <strong>My Balance: </strong>
-          <ContractData
+          {/* <ContractData
             drizzle={drizzle}
             drizzleState={drizzleState}
             contract="TutorialToken"
             method="balanceOf"
             methodArgs={[drizzleState.accounts[0]]}
-          />
+          /> */}
         </p>
         <h3>Send Tokens</h3>
-        <ContractForm
+        {/* <ContractForm
           drizzle={drizzle}
           contract="TutorialToken"
           method="transfer"
           labels={["To Address", "Amount to Send"]}
-        />
+        /> */}
       </div>
 
-      <div className="section">
+      {/* <div className="section">
         <h2>ComplexStorage</h2>
         <p>
           Finally this contract shows data types with additional considerations.
@@ -127,7 +123,7 @@ export default ({ drizzle, drizzleState }) => {
           contract="ComplexStorage"
           method="singleDD"
         />
-      </div>
+      </div> */}
     </div>
   );
 };

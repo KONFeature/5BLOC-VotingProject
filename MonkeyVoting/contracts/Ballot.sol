@@ -5,7 +5,7 @@ pragma solidity >=0.4.22 <0.7.0;
  * @dev Implements voting process along with vote delegation
  */
 contract Ballot {
-   
+
     struct Voter {
         uint weight; // weight is accumulated by delegation
         bool voted;  // if true, that person already voted

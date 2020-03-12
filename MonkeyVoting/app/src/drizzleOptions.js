@@ -1,17 +1,16 @@
 import Web3 from "web3";
-import ComplexStorage from "./contracts/ComplexStorage.json";
-import SimpleStorage from "./contracts/SimpleStorage.json";
-import TutorialToken from "./contracts/TutorialToken.json";
+import Ballot from "./contracts/Ballot.json";
+import Owner from "./contracts/Owner.json";
+import Storage from "./contracts/Storage.json";
+import MonkeyElection from "./contracts/MonkeyElection.json";
 
 const options = {
   web3: {
     block: false,
     customProvider: new Web3("ws://localhost:7545"),
   },
-  contracts: [SimpleStorage, ComplexStorage, TutorialToken],
-  events: {
-    SimpleStorage: ["StorageSet"],
-  },
+  contracts: [Storage, Ballot, Owner, MonkeyElection],
+  events: {}, // TODO : Not needed now, create event in our contract
 };
 
 export default options;

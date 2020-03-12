@@ -4,6 +4,7 @@ import { Drizzle } from "@drizzle/store";
 import drizzleOptions from "./drizzleOptions";
 import LoadingComponent from "./components/LoadingComponent";
 import MainComponent from "./components/MainComponent";
+import HomeComponent from "./components/HomeComponent";
 import 'typeface-roboto';
 import "./App.css";
 
@@ -23,7 +24,7 @@ const App = () => {
           }
 
           return (
-            <MainComponent drizzle={drizzle} drizzleState={drizzleState} />
+            <HomeComponent drizzle={drizzle} drizzleState={drizzleState} />
           )
         }}
       </DrizzleContext.Consumer>
