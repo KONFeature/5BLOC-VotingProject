@@ -2,7 +2,9 @@ import React from "react";
 import { DrizzleContext } from "@drizzle/react-plugin";
 import { Drizzle } from "@drizzle/store";
 import drizzleOptions from "./drizzleOptions";
-import MyComponent from "./MyComponent";
+import LoadingComponent from "./components/LoadingComponent";
+import MainComponent from "./components/MainComponent";
+import 'typeface-roboto';
 import "./App.css";
 
 const drizzle = new Drizzle(drizzleOptions);
@@ -15,11 +17,13 @@ const App = () => {
           const { drizzle, drizzleState, initialized } = drizzleContext;
 
           if (!initialized) {
-            return "Loading..."
+            return (
+              <LoadingComponent />
+            )
           }
 
           return (
-            <MyComponent drizzle={drizzle} drizzleState={drizzleState} />
+            <MainComponent drizzle={drizzle} drizzleState={drizzleState} />
           )
         }}
       </DrizzleContext.Consumer>
