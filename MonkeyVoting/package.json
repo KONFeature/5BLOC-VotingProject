@@ -1,5 +1,5 @@
 {
-  "name": "drizzle-box",
+  "name": "monkey-voting",
   "version": "1.0.0",
   "description": "",
   "main": "truffle-config.js",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/truffle-box/drizzle-box.git"
+    "url": "git+https://github.com/KONFeature/5BLOC-VotingProject.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/truffle-box/drizzle-box/issues"
+    "url": "https://github.com/KONFeature/5BLOC-VotingProject/issues"
   },
-  "homepage": "https://github.com/truffle-box/drizzle-box#readme",
+  "homepage": "https://github.com/KONFeature/5BLOC-VotingProject#readme",
   "dependencies": {
     "@openzeppelin/contracts": "^2.4.0"
   }

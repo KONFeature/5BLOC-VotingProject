@@ -1,5 +1,6 @@
 import React from "react";
 import { newContextComponents } from "@drizzle/react-components";
+import Button from '@material-ui/core/Button';
 import logo from "./logo.png";
 
 const { AccountData, ContractData, ContractForm } = newContextComponents;
@@ -42,6 +43,11 @@ export default ({ drizzle, drizzleState }) => {
             method="storedData"
           />
         </p>
+
+        <Button variant="contained" color="primary">
+      Hello World
+    </Button>
+
         <ContractForm drizzle={drizzle} contract="SimpleStorage" method="set" />
       </div>
 
