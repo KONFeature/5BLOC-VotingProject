@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es2018",
+        "module": "commonjs"
+    },
+    "exclude": [
+        "dist",
+        "node_modules",
+        "build"
+    ],
+    "typeAcquisition": {
+        "include": [
+            "node"
+        ]
+    }
+}
