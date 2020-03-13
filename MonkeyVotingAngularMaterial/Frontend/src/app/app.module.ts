@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppMaterialModule} from './app.material.module';
 // UI
+import { VoteComponent } from './vote/vote.component';
 import { TransactionComponent } from './transaction/transaction.component';
 import { WelcomeComponent  } from './welcome/welcome.component';
 
@@ -20,6 +21,7 @@ import { UploadService} from './services/upload.service';
     AppComponent,
     TransactionComponent,
     WelcomeComponent,
+    VoteComponent
   ],
   imports: [
     AppMaterialModule,

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Angular-MaterialDapp": {
+    "Monkey-VotingDapp": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -21,7 +21,7 @@
               "path": "./webpack.config.js",
               "replaceDuplicatePlugins": true
             },
-            "outputPath": "dist/Angular-MaterialDapp",
+            "outputPath": "dist/Monkey-VotingDapp",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -71,18 +71,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Angular-MaterialDapp:build"
+            "browserTarget": "Monkey-VotingDapp:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "Angular-MaterialDapp:build:production"
+              "browserTarget": "Monkey-VotingDapp:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Angular-MaterialDapp:build"
+            "browserTarget": "Monkey-VotingDapp:build"
           }
         },
         "lint": {
@@ -101,7 +101,7 @@
         "deploy": {
           "builder": "@netlify-builder/deploy:deploy",
           "options": {
-            "outputPath": "dist/Angular-MaterialDapp",
+            "outputPath": "dist/Monkey-VotingDapp",
             "netlifyToken": "e783a286d70697d44aa182b1a2a828ebdcbd96ee42837eb85a0ec7b16dadb4e4",
             "siteId": "1578239f-903e-406f-acb0-a2e1e3d23404"
           }
@@ -109,5 +109,5 @@
       }
     }
   },
-  "defaultProject": "Angular-MaterialDapp"
+  "defaultProject": "Monkey-VotingDapp"
 }

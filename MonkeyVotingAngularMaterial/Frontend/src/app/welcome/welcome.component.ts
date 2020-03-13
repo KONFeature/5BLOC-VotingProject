@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ContractService } from '../services/contract.service';
 
 @Component({
   selector: 'app-welcome',
@@ -6,20 +7,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./welcome.component.scss']
 })
 export class WelcomeComponent implements OnInit {
+  address: string;
+  balance: string;
 
-  constructor() { }
+  constructor(private contract: ContractService) {
+    contract.seeAccountInfo().then((value: any) => {
+      this.address = value.originAccount;
+      this.balance = value.balance;
+    }).catch((error: any) => {
+      console.log(error);
+      contract.failure('Could\'t get the account data, please check if metamask is running correctly and refresh the page');
+    });
+   }
 
   ngOnInit() {
   }
-  navigateTo() {
-    window.open('https://metamask.io/');
-  }
+  
 
-  navigateToPlayStore() {
-    window.open('https://play.google.com/store/apps/details?id=im.status.ethereum');
-  }
-
-  navigateToAppStore() {
-    window.open('https://apps.apple.com/us/app/coinbase-wallet/id1278383455');
-  }
 }

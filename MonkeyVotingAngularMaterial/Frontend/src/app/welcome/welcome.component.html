@@ -1,19 +1,26 @@
 <div class="welcome">
-    <mat-card class="example-card">
+    <mat-card class="welcome-card" *ngIf="balance === undefined">
         <mat-card-content>
-            <div class="center">
-                <img class="logo" src="assets/angular.png" alt="logo_angular">
-                <h3> + </h3>
-                <img class="logo" src="assets/material.png " alt="logo_material">
-                <h2> = 💓 ÐAPP</h2>
-            </div>
-            <p>
-                Easily scalable ÐAPP using Material Components and Angular 8
-            </p>
+            <section style="text-align:center">
+                <h2>Welcome to the Monkey election website</h2>
+                <h3>A bug occured, cec kyour console for more infos</h3>
+            </section>
+        </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="welcome-card" *ngIf="balance !== undefined">
+        <mat-card-content>
+            <section style="text-align:center">
+                <h2>Welcome to the Monkey election website</h2>
+                <h3>Your address is:</h3>
+                <h4>{{address}} </h4>
+                <h3> Your Balance is:</h3>
+                <h4>{{balance}} ETH</h4>
+            </section>
         </mat-card-content>
         <mat-card-actions>
-            <h3> Click on demo and let's Start</h3>
-            <button mat-raised-button routerLink="transaction" color="accent">Demo</button>
+            <button mat-stroked-button routerLink="transaction" color="accent">Delegate</button>
+            <button mat-flat-button routerLink="vote" color="accent">Vote</button>
         </mat-card-actions>
     </mat-card>
 </div>
