@@ -1,0 +1,44 @@
+{
+  "name": "monkey-voting-dapp",
+  "version": "0.0.0",
+  "main": "truffle-config.js",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "~9.0.6",
+    "@angular/cdk": "^9.1.2",
+    "@angular/common": "~9.0.6",
+    "@angular/compiler": "~9.0.6",
+    "@angular/core": "~9.0.6",
+    "@angular/forms": "~9.0.6",
+    "@angular/material": "^9.1.2",
+    "@angular/platform-browser": "~9.0.6",
+    "@angular/platform-browser-dynamic": "~9.0.6",
+    "@angular/router": "~9.0.6",
+    "@openzeppelin/contracts": "^2.5.0",
+    "@truffle/contract": "^4.1.13",
+    "bignumber.js": "^9.0.0",
+    "dotenv": "^8.2.0",
+    "rxjs": "~6.5.4",
+    "tslib": "^1.10.0",
+    "web3": "^1.2.6",
+    "zone.js": "~0.10.2"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~0.900.6",
+    "@angular/cli": "~9.0.6",
+    "@angular/compiler-cli": "~9.0.6",
+    "@angular/language-service": "~9.0.6",
+    "@types/node": "^12.11.1",
+    "ts-node": "~8.3.0",
+    "tslint": "~5.18.0",
+    "typescript": "~3.7.5"
+  }
+}

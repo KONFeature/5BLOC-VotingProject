@@ -1,0 +1,29 @@
+<div class="welcome">
+    <mat-card class="welcome-card" *ngIf="balance === undefined">
+        <mat-card-content>
+            <section style="text-align:center">
+                <h2>Welcome to the Monkey election website</h2>
+                <h3>A bug occured, check your console for more infos</h3>
+            </section>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="welcome-card" *ngIf="balance !== undefined">
+        <mat-card-content>
+            <section style="text-align:center">
+                <h2>Welcome to the Monkey election website</h2>
+                <h3>Your address is:</h3>
+                <h4>{{address}} </h4>
+                <h3> Your Balance is:</h3>
+                <h4>{{balance}} ETH</h4>
+            </section>
+            <section style="text-align:center">
+                <h2>List of candidates</h2>
+            </section>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-stroked-button routerLink="transaction" color="accent">Delegate</button>
+            <button mat-flat-button routerLink="vote" color="accent">Vote</button>
+        </mat-card-actions>
+    </mat-card>
+</div>
