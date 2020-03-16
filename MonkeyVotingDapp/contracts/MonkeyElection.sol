@@ -47,18 +47,14 @@ contract MonkeyElection {
         candidates.push(Candidate(_name, 0));
     }
 
-    // Convert a bytes32 value to a string
-    function convertingToString(bytes32 _in) public pure returns (string memory) {
-        bytes memory bytesArray = new bytes(32);
-        for (uint256 i; i < 32; i++) {
-            bytesArray[i] = _in[i];
-        }
-        return string(bytesArray);
-    }
-
     // Function to get the number of candidates
     function getCandidatesCount() public view returns (uint256) {
         return candidates.length;
+    }
+
+    // Function to get the number of candidates
+    function getCurrentVoterProfile() public view returns (Voter memory) {
+        return voters.get(msg.sender);
     }
 
 }

@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { WEB3 } from "../services/web3.service";
-import { ContractService } from "../services/contract.service";
+import { ContractService, Candidate } from "../services/contract.service";
+import {MatTableDataSource} from '@angular/material/table';
 import Web3 from "web3";
 
 @Component({
@@ -11,6 +12,9 @@ import Web3 from "web3";
 export class MainComponent implements OnInit {
   address: string;
   balance: number;
+
+  displayedColumns: string[] = ['name', 'voteCount'];
+  candidatesDataSource = new MatTableDataSource<Candidate>();
 
   constructor(
     @Inject(WEB3) private web3: Web3,
@@ -41,6 +45,12 @@ export class MainComponent implements OnInit {
 
   fetchCandidates() {
     // Fetch the candidates to the election
-    this.contractService.getCandidates().then(console.log).catch(console.error)
+    this.contractService
+      .getCandidates()
+      .then((candidates: Array<Candidate>) => {
+        console.log(candidates)
+        this.candidatesDataSource = new MatTableDataSource<Candidate>(candidates)
+      })
+      .catch(console.error);
   }
 }

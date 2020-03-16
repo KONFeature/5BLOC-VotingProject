@@ -46,7 +46,7 @@ export class ContractService {
                   return reject("No candidate to fetch");
                 }
 
-                var candidates = Array<Candidate>()
+                var candidates = Array<Candidate>();
 
                 for (let i = 0; i < candidatesCount; i++) {
                   // Fetch the candidate
@@ -55,14 +55,20 @@ export class ContractService {
                     .call({ from: wallet })
                     .then((candidate: Candidate) => {
                       // Save the candidate
-                      candidates.push(candidate)
+                      candidates.push(
+                        new Candidate(
+                          this.web3.utils.hexToAscii(candidate.name),
+                          candidate.voteCount
+                        )
+                      );
                     })
                     .catch((error: any) => {
                       return reject(error);
-                    }).finally(() => {
+                    })
+                    .finally(() => {
                       // If we where at the last iteration we return the list
-                      if(i == (candidatesCount - 1)) {
-                        return resolve(candidates)
+                      if (i == candidatesCount - 1) {
+                        return resolve(candidates);
                       }
                     });
                 }
@@ -81,7 +87,6 @@ export class ContractService {
   }
 }
 
-export class Candidate{
-  name: string
-  voteCount: number
+export class Candidate {
+  constructor(public name: string, public voteCount: number) {}
 }

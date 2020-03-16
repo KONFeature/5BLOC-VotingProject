@@ -19,6 +19,33 @@
             </section>
             <section style="text-align:center">
                 <h2>List of candidates</h2>
+
+                <table mat-table [dataSource]="candidatesDataSource" class="candidates-table">                  
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="name">
+                      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+                    </ng-container>
+                  
+                    <!-- Votes count Column -->
+                    <ng-container matColumnDef="voteCount">
+                      <mat-header-cell mat-header-cell *matHeaderCellDef> Votes count </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.voteCount}} </mat-cell>
+                    </ng-container>
+                  
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                  </table>
+                <!-- <table class="table">
+                    <tr>
+                        <th>Name</th>
+                        <th>Vote count</th>
+                    </tr>
+                    <tr *ngFor="let candidate of candidates">
+                        <td>{{candidate.name}}</td>
+                        <td>{{candidate.voteCount}}</td>
+                    </tr>
+                </table> -->
             </section>
         </mat-card-content>
         <mat-card-actions>
