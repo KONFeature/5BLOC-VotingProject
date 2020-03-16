@@ -1,14 +1,23 @@
 const path = require("path");
 
 module.exports = {
-  // See <http://truffleframework.com/docs/advanced/configuration>
-  // to customize your Truffle configuration!
   contracts_build_directory: path.join(__dirname, "src/app/contracts"),
   networks: {
-    develop: { // default with truffle unbox is 7545, but we can use develop to test changes, ex. truffle migrate --network develop
+    development: {
       host: "127.0.0.1",
-      port: 7545, // Ganache GUI port
-      network_id: "5777" // Ganache GUI network ID
+      port: 7545,
+      network_id: "*", // Match any network id
+      gas: 5000000
+    }
+  },
+  compilers: {
+    solc: {
+      settings: {
+        optimizer: {
+          enabled: true, // Default: false
+          runs: 200      // Default: 200
+        },
+      }
     }
   }
 };

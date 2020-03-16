@@ -39,20 +39,26 @@ contract MonkeyElection {
 
     // Function to add a voters to our voter pool
     function addVoter(address _voteraddr) private {
-        voters[_voteraddr] = Voter(
-            1,
-            false,
-            address(0),
-            0
-        );
+        voters[_voteraddr] = Voter(1, false, address(0), 0);
     }
 
     // Function to add a candidate
     function addCandidate(bytes32 _name) private {
-        candidates.push(Candidate(
-            _name,
-            0
-        ));
+        candidates.push(Candidate(_name, 0));
+    }
+
+    // Convert a bytes32 value to a string
+    function convertingToString(bytes32 _in) public pure returns (string memory) {
+        bytes memory bytesArray = new bytes(32);
+        for (uint256 i; i < 32; i++) {
+            bytesArray[i] = _in[i];
+        }
+        return string(bytesArray);
+    }
+
+    // Function to get the number of candidates
+    function getCandidatesCount() public view returns (uint256) {
+        return candidates.length;
     }
 
 }

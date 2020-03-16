@@ -19,6 +19,7 @@ export class MainComponent implements OnInit {
 
   async ngOnInit() {
     this.fetchAddressAndWallet();
+    this.fetchCandidates();
   }
 
   fetchAddressAndWallet() {
@@ -36,5 +37,10 @@ export class MainComponent implements OnInit {
         console.error("No account linked to MetaMask");
       }
     });
+  }
+
+  fetchCandidates() {
+    // Fetch the candidates to the election
+    this.contractService.getCandidates().then(console.log).catch(console.error)
   }
 }
