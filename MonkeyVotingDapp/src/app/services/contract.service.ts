@@ -15,10 +15,10 @@ export class ContractService {
   constructor(@Inject(WEB3) private web3: Web3) {
     this.electionContract = new this.web3.eth.Contract(
       electionAbi.abi,
-      "0x6A164F279c1B98a1b534fC0dAAc04C9f09FfCa26", // Address of the contract
+      "0x47a659E75655a22f1DA5B286f653B4CE62fedD25", // Address of the contract (TODO : Find how to extract it from the abi generated bu truffle, what is this network id before srsly ?)
       {
-        gasPrice: "5000000",
-        gas: 200000
+        gasPrice: "20000000000",
+        gas: 100000
       }
     );
   }
@@ -53,10 +53,11 @@ export class ContractService {
                   this.electionContract.methods
                     .candidates(i)
                     .call({ from: wallet })
-                    .then((candidate: Candidate) => {
+                    .then((candidate: any) => {
                       // Save the candidate
                       candidates.push(
                         new Candidate(
+                          i,
                           this.web3.utils.hexToAscii(candidate.name),
                           candidate.voteCount
                         )
@@ -85,8 +86,43 @@ export class ContractService {
         });
     });
   }
+
+  /**
+   * Vote for a candidate
+   * @param candidateId the id of the candidate
+   */
+  voteForCandidate(candidateId : number) {
+    return new Promise((resolve, reject) => {
+      // Request the Web3 wallet authorization
+      this.web3.eth
+        .requestAccounts()
+        .then((wallets: string[]) => {
+          if (wallets.length > 0) {
+            const wallet = wallets[0];
+            console.log("Executing transaction with wallet : " + wallet);
+
+            // Submit the vote to the candidate
+            this.electionContract.methods
+              .vote(candidateId)
+              .send({ from: wallet })
+              .then(() => {
+                console.log("Voted for candidate with id: " + candidateId);
+              })
+              .catch((error: any) => {
+                return reject(error);
+              });
+          } else {
+            return reject("No account linked to the MetaMask authorisation");
+          }
+        })
+        .catch(error => {
+          return reject("Account authorisation declined : " + error);
+        });
+    });
+  
+  }
 }
 
 export class Candidate {
-  constructor(public name: string, public voteCount: number) {}
+  constructor(public id: number, public name: string, public voteCount: number) {}
 }

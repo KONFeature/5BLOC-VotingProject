@@ -6,7 +6,7 @@ export const WEB3 = new InjectionToken<Web3>("web3", {
   factory: () => {
     try {
         // Modern dapp browsers...
-          return new Web3(Web3.givenProvider || "ws://localhost:7545");
+          return new Web3(Web3.givenProvider || "ws://localhost:8545");
     } catch (err) {
       throw new Error(
         "Non-Ethereum browser detected. You should consider trying Mist or MetaMask!"

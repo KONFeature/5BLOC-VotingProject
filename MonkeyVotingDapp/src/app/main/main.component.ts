@@ -13,7 +13,7 @@ export class MainComponent implements OnInit {
   address: string;
   balance: number;
 
-  displayedColumns: string[] = ['name', 'voteCount'];
+  displayedColumns: string[] = ['name', 'voteCount', 'action'];
   candidatesDataSource = new MatTableDataSource<Candidate>();
 
   constructor(
@@ -51,6 +51,12 @@ export class MainComponent implements OnInit {
         console.log(candidates)
         this.candidatesDataSource = new MatTableDataSource<Candidate>(candidates)
       })
+      .catch(console.error);
+  }
+
+  onClickVote(candidateId: number) {
+    this.contractService
+      .voteForCandidate(candidateId)
       .catch(console.error);
   }
 }
