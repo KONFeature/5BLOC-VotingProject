@@ -10,6 +10,9 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTableModule } from "@angular/material/table";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatNativeDateModule } from "@angular/material/core";
 
 @NgModule({
   imports: [
@@ -23,7 +26,10 @@ import { MatTableModule } from "@angular/material/table";
     MatInputModule,
     MatListModule,
     MatSnackBarModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   exports: [
     MatButtonModule,
@@ -36,7 +42,10 @@ import { MatTableModule } from "@angular/material/table";
     MatInputModule,
     MatListModule,
     MatSnackBarModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class AppMaterialModule {}

@@ -16,6 +16,8 @@
                 <h4>{{address}} </h4>
                 <h3> Your Balance is:</h3>
                 <h4>{{balance}} ETH</h4>
+                <h3> The election will be closed on:</h3>
+                <h4>{{endDate}}</h4>
             </section>
             <section style="text-align:center">
                 <h2>List of candidates</h2>
@@ -36,7 +38,7 @@
                     <!-- Vote for him column -->
                     <ng-container matColumnDef="action">
                         <mat-header-cell mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> 
+                        <mat-cell *matCellDef="let element">
                             <button mat-flat-button color="accent" (click)="onClickVote(element.id)">Vote</button>
                         </mat-cell>
                     </ng-container>
@@ -47,7 +49,10 @@
             </section>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-stroked-button routerLink="transaction" color="accent">Delegate</button>
+            <button mat-stroked-button (click)="openDelegateDialog()" color="accent">Delegate</button>
+            <button mat-stroked-button color="accent" (click)="openAddCandidateDialog()" *ngIf="isLeader">Add
+                candidate</button>
+            <button mat-stroked-button color="accent" (click)="openChangeEndDateDialog()" *ngIf="isLeader">Change election end date</button>
         </mat-card-actions>
     </mat-card>
 </div>

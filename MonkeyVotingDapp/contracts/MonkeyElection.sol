@@ -30,6 +30,9 @@ contract MonkeyElection {
     // List of all of our candidates
     Candidate[] public candidates;
 
+    // End date of the election (private, because only chairperson can change it)
+    uint256 private endDate;
+
     // Constructor
     constructor() public {
         // The address who init this class is the leader of this election
@@ -58,7 +61,11 @@ contract MonkeyElection {
     @dev This function is using the canditates array
 	@param _name Candidate's name
 	*/
-    function addCandidate(bytes32 _name) private {
+    function addCandidate(bytes32 _name) public {
+        require(
+            msg.sender == chairperson,
+            "You are not the leader of this election"
+        );
         candidates.push(Candidate(_name, 0));
     }
 
@@ -86,6 +93,7 @@ contract MonkeyElection {
 	@param candidate The candidate position in the candidates array
 	*/
     function vote(uint256 candidate) public {
+        require(block.timestamp < endDate, "The election has ended");
         // Find the voter and check infos
         if (!voters[msg.sender].isValue) {
             // If the voter doesn't exist yet we create it
@@ -103,4 +111,58 @@ contract MonkeyElection {
         candidates[candidate].voteCount += voter.weight;
     }
 
+    /// Delegate your vote to the voter `to`.
+    function delegate(address toWho) public {
+        require(block.timestamp < endDate, "The election has ended");
+        require(
+            toWho != msg.sender,
+            "You can't delegate your vote to yourself, stupid bastard."
+        );
+        // If the voters doesn't exist yet we create it
+        if (!voters[msg.sender].isValue) {
+            addVoter(msg.sender);
+        }
+
+        // Find the original voter
+        Voter storage sender = voters[msg.sender];
+        require(!sender.voted, "You already voted.");
+
+        // Recurcivelly delegate the votes
+        address finalDelegateAddress = toWho;
+        while (voters[finalDelegateAddress].isValue) {
+            finalDelegateAddress = voters[finalDelegateAddress].delegate;
+
+            // We found a loop in the delegation, not allowed.
+            require(
+                finalDelegateAddress != msg.sender,
+                "Found loop in delegation, aborting."
+            );
+        }
+
+        // Block the user that delegate his vote
+        sender.voted = true;
+        sender.delegate = finalDelegateAddress;
+
+        // Find the person to wich the vote go and increase his weight
+        Voter storage delegate_ = voters[finalDelegateAddress];
+        delegate_.weight += sender.weight;
+        if (delegate_.voted) {
+            // Increment the vote count of the delegated person if he already vote
+            candidates[delegate_.vote].voteCount += sender.weight;
+        }
+    }
+
+    // Change the end date of the election
+    function changeEndDate(uint256 newEndDate) public {
+        require(
+            msg.sender == chairperson,
+            "You are not the leader of this election"
+        );
+        endDate = newEndDate;
+    }
+
+    // Get the end date of this election
+    function getEndDate() public view returns (uint256) {
+        return endDate;
+    }
 }
