@@ -10,6 +10,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTableModule } from "@angular/material/table";
+import { MatDialogModule } from "@angular/material/dialog";
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { MatTableModule } from "@angular/material/table";
     MatInputModule,
     MatListModule,
     MatSnackBarModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule
   ],
   exports: [
     MatButtonModule,
@@ -36,7 +38,8 @@ import { MatTableModule } from "@angular/material/table";
     MatInputModule,
     MatListModule,
     MatSnackBarModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule
   ]
 })
 export class AppMaterialModule {}

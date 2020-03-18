@@ -46,7 +46,8 @@ contract MonkeyElection {
     }
 
     // Function to add a candidate
-    function addCandidate(bytes32 _name) private {
+    function addCandidate(bytes32 _name) public {
+        require(msg.sender == chairperson, "You are not the leader of this election");
         candidates.push(Candidate(_name, 0));
     }
 
