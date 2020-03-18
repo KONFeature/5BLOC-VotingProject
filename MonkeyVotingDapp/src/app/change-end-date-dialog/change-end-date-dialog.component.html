@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Change end date</h2>
+
+<form [formGroup]="form" (ngSubmit)="save()">
+
+  <mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Choose an end date</mat-label>
+      <input matInput [min]="today" [matDatepicker]="picker" formControlName="endDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-stroked-button (click)="close()" type="button">Cancel</button>
+    <button mat-flat-button mat-primary type="submit">Change</button>
+  </mat-dialog-actions>
+
+</form>
