@@ -4,125 +4,133 @@ import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
 import { resolve } from "dns";
 
+// Truffle part only, because a lot of thing
+const { createInterfaceAdapter } = require("@truffle/interface-adapter");
 const electionAbi = require("../contracts/MonkeyElection.json");
 
 @Injectable({
   providedIn: "root"
 })
 export class ContractService {
-  electionContract: Contract;
-
   constructor(@Inject(WEB3) private web3: Web3) {
-    this.electionContract = new this.web3.eth.Contract(
-      electionAbi.abi,
-      "0x47a659E75655a22f1DA5B286f653B4CE62fedD25", // Address of the contract (TODO : Find how to extract it from the abi generated bu truffle, what is this network id before srsly ?)
-      {
-        gasPrice: "20000000000",
-        gas: 100000
-      }
-    );
+    // Create the election contract
   }
 
   /**
-   * Function used to retrieve the canidates of the election
+   * Init the election contract and return it
    */
-  getCandidates() {
+  async initElectionContract() {
+    return new Promise<Contract>((resolve, reject) => {
+      // Find the contact address with all the truffle infos
+      var networkType = "ethereum";
+      var provider = this.web3.currentProvider;
+      var interfaceAdapter = createInterfaceAdapter({ networkType, provider })
+      interfaceAdapter
+        .getNetworkId()
+        .then((networkId: string) => {
+          // Use the network id to fetch the block address
+          const address = electionAbi.networks[networkId].address;
+          // Create the contract
+          return resolve(
+            new this.web3.eth.Contract(electionAbi.abi, address, {
+              gasPrice: "20000000000",
+              gas: 100000
+            })
+          );
+        })
+        .catch(error => {
+          return reject(error)
+        });
+    });
+  }
+
+  /**
+   * Request the wallet authorisation
+   */
+  requestWalletAuthorisation() {
     return new Promise((resolve, reject) => {
       // Request the Web3 wallet authorization
       this.web3.eth
         .requestAccounts()
         .then((wallets: string[]) => {
           if (wallets.length > 0) {
-            const wallet = wallets[0];
-            console.log("Executing transaction with wallet : " + wallet);
-
-            // Fetch the number of candidates to fetch
-            this.electionContract.methods
-              .getCandidatesCount()
-              .call({ from: wallet })
-              .then((candidatesCount: number) => {
-                console.log("Candidate to fetch : " + candidatesCount);
-                if (candidatesCount == null || candidatesCount < 0) {
-                  return reject("No candidate to fetch");
-                }
-
-                var candidates = Array<Candidate>();
-
-                for (let i = 0; i < candidatesCount; i++) {
-                  // Fetch the candidate
-                  this.electionContract.methods
-                    .candidates(i)
-                    .call({ from: wallet })
-                    .then((candidate: any) => {
-                      // Save the candidate
-                      candidates.push(
-                        new Candidate(
-                          i,
-                          this.web3.utils.hexToAscii(candidate.name),
-                          candidate.voteCount
-                        )
-                      );
-                    })
-                    .catch((error: any) => {
-                      return reject(error);
-                    })
-                    .finally(() => {
-                      // If we where at the last iteration we return the list
-                      if (i == candidatesCount - 1) {
-                        return resolve(candidates);
-                      }
-                    });
-                }
-              })
-              .catch((error: any) => {
-                return reject(error);
-              });
+            // Return the first wallet retreived
+            return resolve(wallets[0])
           } else {
-            return reject("No account linked to the MetaMask authorisation");
+            return reject("No account linked to the MetaMask authorisation")
           }
         })
         .catch(error => {
-          return reject("Account authorisation declined : " + error);
+          return reject("Account authorisation declined : " + error)
         });
     });
+  }
+
+  /**
+   * Function used to retrieve the canidates of the election
+   */
+  async getCandidates() {
+    try {
+      // Authorize wallet and init contract
+      const wallet = await this.requestWalletAuthorisation()
+      const electionContract = await this.initElectionContract()
+
+      console.log("Executing transaction with wallet : " + wallet)
+
+      const candidatesCount = await electionContract.methods
+        .getCandidatesCount()
+        .call({ from: wallet })
+      var candidates = Array<Candidate>()
+      console.log("Candidate to fetch : " + candidatesCount)
+
+      for (let i = 0; i < candidatesCount; i++) {
+        // Fetch the candidate
+        const candidate = await electionContract.methods
+          .candidates(i)
+          .call({ from: wallet })
+        // Save the candidate
+        candidates.push(
+          new Candidate(
+            i,
+            this.web3.utils.hexToAscii(candidate.name),
+            candidate.voteCount
+          )
+        );
+      }
+
+      // Return the canidate list
+      return candidates
+    } catch (e) {
+      console.log("Error when fetching the candidates")
+      return new Error(e);
+    }
   }
 
   /**
    * Vote for a candidate
    * @param candidateId the id of the candidate
    */
-  voteForCandidate(candidateId : number) {
-    return new Promise((resolve, reject) => {
-      // Request the Web3 wallet authorization
-      this.web3.eth
-        .requestAccounts()
-        .then((wallets: string[]) => {
-          if (wallets.length > 0) {
-            const wallet = wallets[0];
-            console.log("Executing transaction with wallet : " + wallet);
+  async voteForCandidate(candidateId: number) {
+    try {
+      // Authorize wallet and init contract
+      const wallet = await this.requestWalletAuthorisation()
+      const electionContract = await this.initElectionContract()
 
-            // Submit the vote to the candidate
-            this.electionContract.methods
-              .vote(candidateId)
-              .send({ from: wallet })
-              .then(() => {
-                console.log("Voted for candidate with id: " + candidateId);
-              })
-              .catch((error: any) => {
-                return reject(error);
-              });
-          } else {
-            return reject("No account linked to the MetaMask authorisation");
-          }
-        })
-        .catch(error => {
-          return reject("Account authorisation declined : " + error);
-        });
-    });
-  
+      console.log("Executing transaction with wallet : " + wallet)
+
+      await electionContract.methods.vote(candidateId).send({ from: wallet })
+      console.log("Voted for candidate with id: " + candidateId)
+    } catch (e) {
+      console.log("Error when fetching the candidates")
+      return new Error(e)
+    }
   }
 }
 
 export class Candidate {
-  constructor(public id: number, public name: string, public voteCount: number) {}
+  constructor(
+    public id: number,
+    public name: string,
+    public voteCount: number
+  ) {}
 }
