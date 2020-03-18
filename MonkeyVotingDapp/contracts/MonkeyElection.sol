@@ -6,34 +6,53 @@ pragma experimental ABIEncoderV2;
 @author Quentin Nivelais
 */
 contract MonkeyElection {
-    /// @dev Model a Monkey Candidate
+    /// @title Candidate
+    /// @notice Model a Monkey Candidate
+    /// @dev name is a the candidate name
+    /// @dev voteCount is the number of vote for this candidate
     struct Candidate {
         bytes32 name;
         uint256 voteCount;
     }
 
-    /// @dev Model a Monkey voters
+    /// @title Monkey voter
+    /// @notice Model a Monkey voter
+    /// @dev weight is the number of delegation to this voters (1 by default)
+    /// @dev voted is true if the voter already voted, otherwise false
+    /// @dev delegate is the address to who this voter delegate his vote, if any ?
+    /// @dev vote is the candidates index for wich candidate this voter voted
+    /// @dev isValue is true if this voter a correct value, otherwise false
     struct Voter {
-        uint256 weight; // Number of delegation to this voters (1 by default)
-        bool voted; // Is this voter already voted ?
-        address delegate; // To who this voter delegate his vote, if any ?
-        uint256 vote; // For wich candidate this voter voted
-        bool isValue; // Is this voter a correct value ?
+        uint256 weight;
+        bool voted;
+        address delegate;
+        uint256 vote;
+        bool isValue;
     }
 
-    /// @dev The responsible for this monkey election
+    /// @title Chairperson
+    /// @notice The responsible for this monkey election
     address public chairperson;
 
-    /// @dev Map a blockchain address to a voter
+    /// @title Voters
+    /// @notice Map a blockchain address to a voter
+    /// @dev Key is the voter's address
+    /// @dev value is a Voter struct
     mapping(address => Voter) public voters;
 
-    /// @dev List of all of our candidates
+    /// @title Candidates
+    /// @notice List of all the candidates for the election
     Candidate[] public candidates;
 
-    /// @dev End date of the election (private, because only chairperson can change it)
+    /// @title Election's end date
+    /// @notice End date of the election
+    /// @dev Private, because only chairperson can change it
     uint256 private endDate;
 
-    /// @dev Constructor
+    /**
+    @notice Create a new election with candidates
+    @dev The address who init this class as will be set as the election leader
+    */
     constructor() public {
         // The address who init this class is the leader of this election
         chairperson = msg.sender;

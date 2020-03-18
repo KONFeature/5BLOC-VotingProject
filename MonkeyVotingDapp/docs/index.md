@@ -69,9 +69,10 @@ This function is using the attribute lastCompletedMigration
 
 ### <span id="MonkeyElection-constructor--"></span> `constructor()` (public)
 
+Create a new election with candidates
 
 
-Constructor
+The address who init this class as will be set as the election leader
 
 ### <span id="MonkeyElection-addCandidate-bytes32-"></span> `addCandidate(bytes32 _name)` (public)
 
