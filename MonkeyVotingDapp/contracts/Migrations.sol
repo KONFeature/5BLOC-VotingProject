@@ -1,23 +1,39 @@
 pragma solidity >=0.4.22 <0.7.0;
 
+/**
+@title Migrations Interface
+@author Quentin Nivelais
+*/
 contract Migrations {
-  address public owner;
-  uint256 public last_completed_migration;
+    address public owner;
+    uint256 public lastCompletedMigration;
 
-  modifier restricted() {
-    if (msg.sender == owner) _;
-  }
+    modifier restricted() {
+        if (msg.sender == owner) _;
+    }
 
-  constructor() public {
-    owner = msg.sender;
-  }
+    constructor() public {
+        owner = msg.sender;
+    }
 
-  function setCompleted(uint completed) public restricted {
-    last_completed_migration = completed;
-  }
+    /**
+	@notice Set the migration as completed
+    @dev This function is using the attribute lastCompletedMigration
+    @
+	@param completed TODO
+	*/
+    function setCompleted(uint256 completed) public restricted {
+        lastCompletedMigration = completed;
+    }
 
-  function upgrade(address new_address) public restricted {
-    Migrations upgraded = Migrations(new_address);
-    upgraded.setCompleted(last_completed_migration);
-  }
+    /**
+	@notice Perform an upgrade
+    @dev This function is using the attribute lastCompletedMigration
+    @
+	@param newAddress The new address
+	*/
+    function upgrade(address newAddress) public restricted {
+        Migrations upgraded = Migrations(newAddress);
+        upgraded.setCompleted(lastCompletedMigration);
+    }
 }

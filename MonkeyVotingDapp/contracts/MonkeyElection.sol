@@ -1,6 +1,10 @@
 pragma solidity >=0.4.22 <0.7.0;
 pragma experimental ABIEncoderV2;
 
+/**
+@title MonkeyElection Interface
+@author Quentin Nivelais
+*/
 contract MonkeyElection {
     // Model a Monkey Candidate
     struct Candidate {
@@ -39,31 +43,51 @@ contract MonkeyElection {
         addCandidate("Peaceful Monkey");
     }
 
-    // Function to add a voters to our voter pool
+    /**
+	@notice Add a voters to the voter pool
+    @dev This function is using the voters mapping
+	@param _voteraddr Voter's address
+	*/
     function addVoter(address _voteraddr) private {
         require(!voters[msg.sender].isValue, "Already exist");
         voters[_voteraddr] = Voter(1, false, address(0), 0, true);
     }
 
-    // Function to add a candidate
+    /**
+	@notice Add a canditate
+    @dev This function is using the canditates array
+	@param _name Candidate's name
+	*/
     function addCandidate(bytes32 _name) private {
         candidates.push(Candidate(_name, 0));
     }
 
-    // Function to get the number of candidates
-    function getCandidatesCount() public view returns (uint256) {
+    /**
+	@notice Get the number of candidates
+    @dev This function is using the canditates array
+	@return { "value": "Number of candidate(s)" }
+	*/
+    function getCandidatesCount() public view returns (uint256 value) {
         return candidates.length;
     }
 
-    // Function to get the number of candidates
+    /**
+	@notice Get current voter profile
+    @dev This function is using the voters mapping
+	@return { "Voter": "The voter(s) blockchain address" }
+	*/
     function getCurrentVoterProfile() public view returns (Voter memory) {
         return voters[msg.sender];
     }
 
-    /// Vote for a candidate to the election
-    function vote(uint candidate) public {
+    /**
+	@notice Vote for a candidate
+    @dev This function is using the voters mapping and the candidates array
+	@param candidate The candidate position in the candidates array
+	*/
+    function vote(uint256 candidate) public {
         // Find the voter and check infos
-        if(!voters[msg.sender].isValue) {
+        if (!voters[msg.sender].isValue) {
             // If the voter doesn't exist yet we create it
             addVoter(msg.sender);
         }
