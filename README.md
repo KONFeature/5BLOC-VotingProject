@@ -25,5 +25,5 @@ This will launch the UI part of this project
 To build the generate the solidity doc:
 
 ```console
-solidity-docgen -i .\contracts\ -o .\docs\
+npx solidity-docgen -i .\contracts\ -o .\docs\
 ```

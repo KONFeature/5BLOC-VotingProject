@@ -90,7 +90,7 @@ contract MonkeyElection {
     /**
 	@notice Vote for a candidate
     @dev This function is using the voters mapping and the candidates array
-	@param candidate The candidate position in the candidates array
+	@param _candidate The candidate position in the candidates array
 	*/
     function vote(uint256 _candidate) public {
         require(block.timestamp < endDate, "The election has ended");
@@ -114,7 +114,7 @@ contract MonkeyElection {
     /**
 	@notice Delegate your vote to the voter `to`
     @dev This function is using the voters mapping and the candidates array
-	@param toWho Voter's address
+	@param _toWho Voter's address
 	*/
     function delegate(address _toWho) public {
         require(block.timestamp < endDate, "The election has ended");
@@ -159,7 +159,7 @@ contract MonkeyElection {
     /**
 	@notice Change the end date of the election
     @dev This function is using the state variable endDate and chairperson
-	@param newEndDate The new election's end date
+	@param _newEndDate The new election's end date
 	*/
     function changeEndDate(uint256 _newEndDate) public {
         require(
