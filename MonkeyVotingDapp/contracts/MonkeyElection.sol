@@ -2,17 +2,17 @@ pragma solidity >=0.4.22 <0.7.0;
 pragma experimental ABIEncoderV2;
 
 /**
-@title MonkeyElection Interface
+@title Monkey election implementation
 @author Quentin Nivelais
 */
 contract MonkeyElection {
-    // Model a Monkey Candidate
+    /// @dev Model a Monkey Candidate
     struct Candidate {
         bytes32 name;
         uint256 voteCount;
     }
 
-    // Model a Monkey voters
+    /// @dev Model a Monkey voters
     struct Voter {
         uint256 weight; // Number of delegation to this voters (1 by default)
         bool voted; // Is this voter already voted ?
@@ -21,19 +21,19 @@ contract MonkeyElection {
         bool isValue; // Is this voter a correct value ?
     }
 
-    // The responsible for this monkey election
+    /// @dev The responsible for this monkey election
     address public chairperson;
 
-    // Map a blockchain address to a voter
+    /// @dev Map a blockchain address to a voter
     mapping(address => Voter) public voters;
 
-    // List of all of our candidates
+    /// @dev List of all of our candidates
     Candidate[] public candidates;
 
-    // End date of the election (private, because only chairperson can change it)
+    /// @dev End date of the election (private, because only chairperson can change it)
     uint256 private endDate;
 
-    // Constructor
+    /// @dev Constructor
     constructor() public {
         // The address who init this class is the leader of this election
         chairperson = msg.sender;
@@ -49,16 +49,16 @@ contract MonkeyElection {
     /**
 	@notice Add a voters to the voter pool
     @dev This function is using the voters mapping
-	@param _voteraddr Voter's address
+	@param _voterAddress Voter's address
 	*/
-    function addVoter(address _voteraddr) private {
+    function addVoter(address _voterAddress) private {
         require(!voters[msg.sender].isValue, "Already exist");
-        voters[_voteraddr] = Voter(1, false, address(0), 0, true);
+        voters[_voterAddress] = Voter(1, false, address(0), 0, true);
     }
 
     /**
 	@notice Add a canditate
-    @dev This function is using the canditates array
+    @dev This function is using the canditates array and the state variable chairperson
 	@param _name Candidate's name
 	*/
     function addCandidate(bytes32 _name) public {
@@ -74,7 +74,7 @@ contract MonkeyElection {
     @dev This function is using the canditates array
 	@return { "value": "Number of candidate(s)" }
 	*/
-    function getCandidatesCount() public view returns (uint256 value) {
+    function getCandidatesCount() public view returns (uint256) {
         return candidates.length;
     }
 
@@ -92,7 +92,7 @@ contract MonkeyElection {
     @dev This function is using the voters mapping and the candidates array
 	@param candidate The candidate position in the candidates array
 	*/
-    function vote(uint256 candidate) public {
+    function vote(uint256 _candidate) public {
         require(block.timestamp < endDate, "The election has ended");
         // Find the voter and check infos
         if (!voters[msg.sender].isValue) {
@@ -105,17 +105,21 @@ contract MonkeyElection {
 
         // Tell for who he voted and if he have voted
         voter.voted = true;
-        voter.vote = candidate;
+        voter.vote = _candidate;
 
         // Add the vote to the candidate
-        candidates[candidate].voteCount += voter.weight;
+        candidates[_candidate].voteCount += voter.weight;
     }
 
-    /// Delegate your vote to the voter `to`.
-    function delegate(address toWho) public {
+    /**
+	@notice Delegate your vote to the voter `to`
+    @dev This function is using the voters mapping and the candidates array
+	@param toWho Voter's address
+	*/
+    function delegate(address _toWho) public {
         require(block.timestamp < endDate, "The election has ended");
         require(
-            toWho != msg.sender,
+            _toWho != msg.sender,
             "You can't delegate your vote to yourself, stupid bastard."
         );
         // If the voters doesn't exist yet we create it
@@ -128,7 +132,7 @@ contract MonkeyElection {
         require(!sender.voted, "You already voted.");
 
         // Recurcivelly delegate the votes
-        address finalDelegateAddress = toWho;
+        address finalDelegateAddress = _toWho;
         while (voters[finalDelegateAddress].isValue) {
             finalDelegateAddress = voters[finalDelegateAddress].delegate;
 
@@ -152,16 +156,23 @@ contract MonkeyElection {
         }
     }
 
-    // Change the end date of the election
-    function changeEndDate(uint256 newEndDate) public {
+    /**
+	@notice Change the end date of the election
+    @dev This function is using the state variable endDate and chairperson
+	@param newEndDate The new election's end date
+	*/
+    function changeEndDate(uint256 _newEndDate) public {
         require(
             msg.sender == chairperson,
             "You are not the leader of this election"
         );
-        endDate = newEndDate;
+        endDate = _newEndDate;
     }
 
-    // Get the end date of this election
+    /**
+	@notice Get the end date of this election
+	@return The election's end date
+	*/
     function getEndDate() public view returns (uint256) {
         return endDate;
     }
