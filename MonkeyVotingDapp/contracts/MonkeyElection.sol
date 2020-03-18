@@ -47,7 +47,10 @@ contract MonkeyElection {
 
     // Function to add a candidate
     function addCandidate(bytes32 _name) public {
-        require(msg.sender == chairperson, "You are not the leader of this election");
+        require(
+            msg.sender == chairperson,
+            "You are not the leader of this election"
+        );
         candidates.push(Candidate(_name, 0));
     }
 
@@ -62,9 +65,9 @@ contract MonkeyElection {
     }
 
     /// Vote for a candidate to the election
-    function vote(uint candidate) public {
+    function vote(uint256 candidate) public {
         // Find the voter and check infos
-        if(!voters[msg.sender].isValue) {
+        if (!voters[msg.sender].isValue) {
             // If the voter doesn't exist yet we create it
             addVoter(msg.sender);
         }
@@ -78,6 +81,36 @@ contract MonkeyElection {
 
         // Add the vote to the candidate
         candidates[candidate].voteCount += voter.weight;
+    }
+
+    /// Delegate your vote to the voter `to`.
+    function delegate(address toWho) public {
+        require(toWho != msg.sender, "You can't delegate your vote to yourself, stupid bastard.");
+
+        // Find the original voter
+        Voter storage sender = voters[msg.sender];
+        require(!sender.voted, "You already voted.");
+
+        // Recurcivelly delegate the votes
+        address finalDelegateAddress = toWho;
+        while (voters[finalDelegateAddress].isValue) {
+            finalDelegateAddress = voters[finalDelegateAddress].delegate;
+
+            // We found a loop in the delegation, not allowed.
+            require(finalDelegateAddress != msg.sender, "Found loop in delegation, aborting.");
+        }
+
+        // Block the user that delegate his vote
+        sender.voted = true;
+        sender.delegate = finalDelegateAddress;
+
+        // Find the person to wich the vote go and increase his weight
+        Voter storage delegate_ = voters[finalDelegateAddress];
+        delegate_.weight += sender.weight;
+        if (delegate_.voted) {
+            // Increment the vote count of the delegated person if he already vote
+            candidates[delegate_.vote].voteCount += sender.weight;
+        }
     }
 
 }

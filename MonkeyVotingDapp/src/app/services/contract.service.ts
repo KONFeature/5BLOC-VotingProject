@@ -2,7 +2,6 @@ import { Injectable, Inject } from "@angular/core";
 import { WEB3 } from "./web3.service";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
-import { resolve } from "dns";
 
 // Truffle part only, because a lot of thing
 const { createInterfaceAdapter } = require("@truffle/interface-adapter");
@@ -155,9 +154,31 @@ export class ContractService {
       const electionContract = await this.initElectionContract();
 
       // Launch the add candidate method
-      await electionContract.methods.addCandidate(this.web3.utils.asciiToHex(candidateName)).send({ from: wallet });
+      await electionContract.methods
+        .addCandidate(this.web3.utils.asciiToHex(candidateName))
+        .send({ from: wallet });
     } catch (e) {
       console.error("Error when adding the candidates");
+      throw new Error(e);
+    }
+  }
+
+  /**
+   * Delegate the current person vote to another
+   * @param delegateTo
+   */
+  async delegateVote(delegateTo: string) {
+    try {
+      // Authorize wallet and init contract
+      const wallet = await this.requestWalletAuthorisation();
+      const electionContract = await this.initElectionContract();
+
+      // Launch the add candidate method
+      await electionContract.methods
+        .delegate(delegateTo)
+        .send({ from: wallet });
+    } catch (e) {
+      console.error("Error when delegating the vote");
       throw new Error(e);
     }
   }

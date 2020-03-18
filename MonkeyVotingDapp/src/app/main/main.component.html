@@ -36,7 +36,7 @@
                     <!-- Vote for him column -->
                     <ng-container matColumnDef="action">
                         <mat-header-cell mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
-                        <mat-cell *matCellDef="let element"> 
+                        <mat-cell *matCellDef="let element">
                             <button mat-flat-button color="accent" (click)="onClickVote(element.id)">Vote</button>
                         </mat-cell>
                     </ng-container>
@@ -47,8 +47,9 @@
             </section>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-stroked-button routerLink="transaction" color="accent">Delegate</button>
-            <button mat-stroked-button color="accent" (click)="openAddCandidateDialog()" *ngIf="isLeader">Add candidate</button>
+            <button mat-stroked-button (click)="openDelegateDialog()" color="accent">Delegate</button>
+            <button mat-stroked-button color="accent" (click)="openAddCandidateDialog()" *ngIf="isLeader">Add
+                candidate</button>
         </mat-card-actions>
     </mat-card>
 </div>

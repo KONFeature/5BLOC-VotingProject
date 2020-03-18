@@ -5,6 +5,7 @@ import { ContractService, Candidate } from "../services/contract.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { AddCandidateDialogComponent } from "../add-candidate-dialog/add-candidate-dialog.component";
+import { DelegateVotingDialogComponent } from "../delegate-voting-dialog/delegate-voting-dialog.component";
 
 @Component({
   selector: "app-main",
@@ -83,5 +84,9 @@ export class MainComponent implements OnInit {
 
   openAddCandidateDialog() {
     this.dialog.open(AddCandidateDialogComponent);
+  }
+
+  openDelegateDialog() {
+    this.dialog.open(DelegateVotingDialogComponent);
   }
 }

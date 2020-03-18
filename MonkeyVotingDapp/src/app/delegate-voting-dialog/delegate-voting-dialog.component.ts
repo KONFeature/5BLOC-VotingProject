@@ -4,21 +4,21 @@ import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 import { ContractService } from "../services/contract.service";
 
 @Component({
-  selector: "app-add-candidate-dialog",
-  templateUrl: "add-candidate-dialog.component.html",
+  selector: "app-delegate-voting-dialog",
+  templateUrl: "delegate-voting-dialog.component.html",
   styles: []
 })
-export class AddCandidateDialogComponent implements OnInit {
+export class DelegateVotingDialogComponent implements OnInit {
   form: FormGroup;
-  candidateName: String;
+  address: String;
 
   constructor(
     private contractService: ContractService,
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<AddCandidateDialogComponent>
+    private dialogRef: MatDialogRef<DelegateVotingDialogComponent>
   ) {
     this.form = fb.group({
-      name: [this.candidateName, Validators.required]
+      address: [this.address, Validators.required]
     });
   }
 
@@ -28,12 +28,13 @@ export class AddCandidateDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  async save() {
+  async delegate() {
     try {
+      console.log(this.address);
       // check if the form is valid first
       if (this.form.valid) {
-        // Then add candidate
-        await this.contractService.addCandidate(this.form.value.name);
+        // Then delegate the vote
+        await this.contractService.delegateVote(this.form.value.address);
         // And close the form
         this.dialogRef.close();
       }
