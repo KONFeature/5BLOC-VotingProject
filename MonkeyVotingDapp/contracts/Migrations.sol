@@ -18,7 +18,7 @@ contract Migrations {
 
     /**
 	@notice Set the migration as completed
-    @dev This function is using the attribute lastCompletedMigration
+    @dev This function is using the state variable lastCompletedMigration
     @
 	@param completed TODO
 	*/
