@@ -18,7 +18,7 @@ export class ContractService {
   /**
    * Init the election contract and return it
    */
-  async initElectionContract() {
+  async initElectionContract() : Promise<Contract> {
     return new Promise<Contract>((resolve, reject) => {
       // Find the contact address with all the truffle infos
       var networkType = "ethereum";
@@ -68,7 +68,7 @@ export class ContractService {
   /**
    * function used to check if the current user is the chairpersonn of the election
    */
-  async isThechairpersonMe() {
+  async isThechairpersonMe() : Promise<Boolean> {
     try {
       // Authorize wallet and init contract
       const wallet = await this.requestWalletAuthorisation();
@@ -89,7 +89,7 @@ export class ContractService {
   /**
    * Function used to retrieve the canidates of the election
    */
-  async getCandidates() {
+  async getCandidates() : Promise<Array<Candidate>> {
     try {
       // Authorize wallet and init contract
       const wallet = await this.requestWalletAuthorisation();
@@ -173,12 +173,55 @@ export class ContractService {
       const wallet = await this.requestWalletAuthorisation();
       const electionContract = await this.initElectionContract();
 
-      // Launch the add candidate method
+      // Launch the delegate method
       await electionContract.methods
         .delegate(delegateTo)
         .send({ from: wallet });
     } catch (e) {
       console.error("Error when delegating the vote");
+      throw new Error(e);
+    }
+  }
+
+  /**
+   * change the end date of the election
+   * @param endDate
+   */
+  async updateEndDate(endDate: Date) {
+    try {
+      // Authorize wallet and init contract
+      const wallet = await this.requestWalletAuthorisation();
+      const electionContract = await this.initElectionContract();
+
+      // Launch the update
+      await electionContract.methods
+        .changeEndDate(endDate.getTime() / 1000)
+        .send({ from: wallet });
+    } catch (e) {
+      console.error("Error when updating the end date of the election");
+      throw new Error(e);
+    }
+  }
+
+  /**
+   * Fetch the end date of the election
+   * @param endDate
+   */
+  async getEndDate() : Promise<Date> {
+    try {
+      // Authorize wallet and init contract
+      const wallet = await this.requestWalletAuthorisation();
+      const electionContract = await this.initElectionContract();
+
+      // Fetch the end date from the contract
+      const endDateTimestamp = await electionContract.methods
+        .getEndDate()
+        .call({ from: wallet });
+
+        // Return the parsed end date
+        return new Date(endDateTimestamp * 1000)
+    } catch (e) {
+      console.error("Error when updating the end date of the election");
       throw new Error(e);
     }
   }

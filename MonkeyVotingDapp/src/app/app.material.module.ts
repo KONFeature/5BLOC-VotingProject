@@ -11,6 +11,8 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTableModule } from "@angular/material/table";
 import { MatDialogModule } from "@angular/material/dialog";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatNativeDateModule } from "@angular/material/core";
 
 @NgModule({
   imports: [
@@ -25,7 +27,9 @@ import { MatDialogModule } from "@angular/material/dialog";
     MatListModule,
     MatSnackBarModule,
     MatTabsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   exports: [
     MatButtonModule,
@@ -39,7 +43,9 @@ import { MatDialogModule } from "@angular/material/dialog";
     MatListModule,
     MatSnackBarModule,
     MatTabsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class AppMaterialModule {}

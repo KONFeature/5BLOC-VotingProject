@@ -9,13 +9,15 @@ import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
 import { AddCandidateDialogComponent } from './add-candidate-dialog/add-candidate-dialog.component';
 import { DelegateVotingDialogComponent } from './delegate-voting-dialog/delegate-voting-dialog.component';
+import { ChangeEndDateDialogComponent } from './change-end-date-dialog/change-end-date-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
     AddCandidateDialogComponent,
-    DelegateVotingDialogComponent
+    DelegateVotingDialogComponent,
+    ChangeEndDateDialogComponent
   ],
   imports: [
     BrowserModule,
