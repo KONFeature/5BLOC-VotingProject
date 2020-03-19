@@ -1,24 +1,45 @@
 <div class="welcome">
-    <mat-card class="welcome-card" *ngIf="balance === undefined">
+    <mat-card class="welcome-card" *ngIf="voter === undefined">
         <mat-card-content>
             <section style="text-align:center">
                 <h2>Welcome to the Monkey election website</h2>
-                <h3>A bug occured, check your console for more infos</h3>
+                <h3>the election isn't deployed on your blockchain yet (or unfindable), would you like to start a new
+                    one ?</h3>
             </section>
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="welcome-card" *ngIf="balance !== undefined">
+    <mat-card class="welcome-card" *ngIf="voter !== undefined && !voter.participatingToElection">
         <mat-card-content>
             <section style="text-align:center">
                 <h2>Welcome to the Monkey election website</h2>
-                <h3>Your address is:</h3>
-                <h4>{{address}} </h4>
-                <h3> Your Balance is:</h3>
-                <h4>{{balance}} ETH</h4>
-                <h3> The election will be closed on:</h3>
+                <h3>Your address: {{voter.address}}</h3>
+                <h3>Your Balance is: {{voter.balance}} ETH</h3>
+                <h3>The election will end the:</h3>
                 <h4>{{endDate}}</h4>
             </section>
+            <mat-divider></mat-divider>
+            <section style="text-align:center">
+                <h2>You are not a part of this election</h2>
+                <h3>If you want to join it, click on the participate button below</h3>
+            </section>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-stroked-button (click)="participate()" color="accent">Participate</button>
+        </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="welcome-card" *ngIf="voter !== undefined && voter.participatingToElection">
+        <mat-card-content>
+            <section style="text-align:center">
+                <h2>Welcome to the Monkey election website</h2>
+                <h3>Your address: {{voter.address}}</h3>
+                <h3>Your Balance is: {{voter.balance}} ETH</h3>
+                <h3 *ngIf="!voter.voted">You will be voting for {{voter.voteWeight}} persons</h3>
+                <h3>The election will end the:</h3>
+                <h4>{{endDate}}</h4>
+            </section>
+            <mat-divider></mat-divider>
             <section style="text-align:center">
                 <h2>List of candidates</h2>
 
@@ -39,7 +60,8 @@
                     <ng-container matColumnDef="action">
                         <mat-header-cell mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
                         <mat-cell *matCellDef="let element">
-                            <button mat-flat-button color="accent" (click)="onClickVote(element.id)">Vote</button>
+                            <button mat-flat-button color="accent" [disabled]="voter.voted"
+                                (click)="onClickVote(element.id)">Vote</button>
                         </mat-cell>
                     </ng-container>
 
@@ -49,10 +71,12 @@
             </section>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-stroked-button (click)="openDelegateDialog()" color="accent">Delegate</button>
-            <button mat-stroked-button color="accent" (click)="openAddCandidateDialog()" *ngIf="isLeader">Add
+            <button mat-stroked-button (click)="openDelegateDialog()" [disabled]="voter.voted"
+                color="accent">Delegate</button>
+            <button mat-stroked-button color="accent" (click)="openAddCandidateDialog()" *ngIf="voter.isChairperson">Add
                 candidate</button>
-            <button mat-stroked-button color="accent" (click)="openChangeEndDateDialog()" *ngIf="isLeader">Change election end date</button>
+            <button mat-stroked-button color="accent" (click)="openChangeEndDateDialog()"
+                *ngIf="voter.isChairperson">Change election end date</button>
         </mat-card-actions>
     </mat-card>
 </div>

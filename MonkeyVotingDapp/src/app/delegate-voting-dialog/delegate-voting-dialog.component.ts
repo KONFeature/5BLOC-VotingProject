@@ -30,7 +30,6 @@ export class DelegateVotingDialogComponent implements OnInit {
 
   async delegate() {
     try {
-      console.log(this.address);
       // check if the form is valid first
       if (this.form.valid) {
         // Then delegate the vote
