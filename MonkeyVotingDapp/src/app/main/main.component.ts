@@ -1,12 +1,14 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { WEB3 } from "../services/web3.service";
-import Web3 from "web3";
-import { ContractService, Candidate } from "../services/contract.service";
+import {
+  ContractService,
+  Candidate,
+  Voter
+} from "../services/contract.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { AddCandidateDialogComponent } from "../add-candidate-dialog/add-candidate-dialog.component";
 import { DelegateVotingDialogComponent } from "../delegate-voting-dialog/delegate-voting-dialog.component";
-import { ChangeEndDateDialogComponent } from '../change-end-date-dialog/change-end-date-dialog.component';
+import { ChangeEndDateDialogComponent } from "../change-end-date-dialog/change-end-date-dialog.component";
 
 @Component({
   selector: "app-main",
@@ -14,95 +16,104 @@ import { ChangeEndDateDialogComponent } from '../change-end-date-dialog/change-e
   styleUrls: ["./main.component.scss"]
 })
 export class MainComponent implements OnInit {
-  address: string
-  balance: number
-  endDate: Date
-  isLeader: boolean = false
+  endDate: Date;
+  voter: Voter;
 
-  displayedColumns: string[] = ["name", "voteCount", "action"]
-  candidatesDataSource = new MatTableDataSource<Candidate>()
+  displayedColumns: string[] = ["name", "voteCount", "action"];
+  candidatesDataSource = new MatTableDataSource<Candidate>();
 
   constructor(
-    @Inject(WEB3) private web3: Web3,
     private contractService: ContractService,
     private dialog: MatDialog
   ) {}
 
   async ngOnInit() {
-    this.checkLeader()
-    this.fetchAddressAndWallet()
-    this.fetchEndDate()
-    this.fetchCandidates()
+    this.fetchVoter();
+    this.fetchEndDate();
+    this.fetchCandidates();
   }
 
-  async checkLeader() {
+  async fetchVoter() {
     try {
-      // Check the chairleader
-      this.isLeader = (await this.contractService.isThechairpersonMe()) as boolean
+      // Retreive the voter
+      this.voter = await this.contractService.whoAmI();
+      console.log(this.voter);
     } catch (e) {
       console.error(e);
-    }
-  }
-
-  async fetchAddressAndWallet() {
-    try {
-      // Init web3 wallet
-      const wallets = await this.web3.eth.requestAccounts()
-      if (wallets.length > 0) {
-        // Fetch the first address and it's balance
-        this.address = wallets[0];
-        const rawBalance = await this.web3.eth.getBalance(this.address)
-        this.balance = parseInt(rawBalance, 10) / 1000000000000000000
-      } else {
-        throw new Error("No account linked to MetaMask")
-      }
-    } catch (e) {
-      console.error(e)
     }
   }
 
   async fetchCandidates() {
     try {
       // Fetch the candidates to the election
-      const candidates = await this.contractService.getCandidates()
+      const candidates = await this.contractService.getCandidates();
       // Add the candidate in the table
       this.candidatesDataSource = new MatTableDataSource<Candidate>(
         candidates as Candidate[]
-      )
+      );
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
   }
 
   async fetchEndDate() {
     try {
       // Fetch the candidates to the election
-      this.endDate = await this.contractService.getEndDate()
+      this.endDate = await this.contractService.getEndDate();
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
   }
 
   async onClickVote(candidateId: number) {
     try {
       // Vote for the candidate
-      await this.contractService.voteForCandidate(candidateId)
-      // Refresh candidate when vote is validated
-      this.fetchCandidates()
+      await this.contractService.voteForCandidate(candidateId);
+      // Refresh voters & candidate when vote is validated
+      this.fetchVoter();
+      this.fetchCandidates();
     } catch (e) {
-      console.error(e)
+      console.error(e);
+    }
+  }
+
+  async participate() {
+    try {
+      // Vote for the candidate
+      await this.contractService.participateToElection();
+      // Refresh voters & candidate when user is added
+      this.fetchVoter();
+      this.fetchCandidates();
+    } catch (e) {
+      console.error(e);
     }
   }
 
   openAddCandidateDialog() {
-    this.dialog.open(AddCandidateDialogComponent)
+    this.dialog
+      .open(AddCandidateDialogComponent)
+      .afterClosed()
+      .subscribe(() => {
+        this.fetchCandidates();
+      });
   }
 
   openDelegateDialog() {
-    this.dialog.open(DelegateVotingDialogComponent)
+    this.dialog
+      .open(DelegateVotingDialogComponent)
+      .afterClosed()
+      .subscribe(() => {
+        this.fetchCandidates();
+        this.fetchVoter();
+      });
   }
 
   openChangeEndDateDialog() {
-    this.dialog.open(ChangeEndDateDialogComponent)
+    this.dialog
+      .open(ChangeEndDateDialogComponent)
+      .afterClosed()
+      .subscribe(() => {
+        this.fetchEndDate();
+      });
   }
 }

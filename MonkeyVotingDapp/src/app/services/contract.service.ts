@@ -18,70 +18,109 @@ export class ContractService {
   /**
    * Init the election contract and return it
    */
-  async initElectionContract() : Promise<Contract> {
-    return new Promise<Contract>((resolve, reject) => {
+  async initElectionContract(): Promise<Contract> {
+    try {
+      // Init all the infos required by truffle
+      const networkType = "ethereum";
+      const provider = this.web3.currentProvider;
+      const interfaceAdapter = createInterfaceAdapter({
+        networkType,
+        provider
+      });
+
       // Find the contact address with all the truffle infos
-      var networkType = "ethereum";
-      var provider = this.web3.currentProvider;
-      var interfaceAdapter = createInterfaceAdapter({ networkType, provider });
-      interfaceAdapter
-        .getNetworkId()
-        .then((networkId: string) => {
-          // Use the network id to fetch the block address
-          const address = electionAbi.networks[networkId].address;
-          // Create the contract
-          return resolve(
-            new this.web3.eth.Contract(electionAbi.abi, address, {
-              gasPrice: "20000000000",
-              gas: 10000000
-            })
-          );
-        })
-        .catch(error => {
-          return reject(error);
-        });
-    });
+      const networkId = await interfaceAdapter.getNetworkId();
+      const address = electionAbi.networks[networkId].address;
+
+      if (networkId == null || address == null) {
+        throw new Error("No election deployed currently");
+      }
+
+      // Create the contract with the founded address
+      return new this.web3.eth.Contract(electionAbi.abi, address, {
+        gasPrice: "20000000000",
+        gas: 10000000
+      });
+    } catch (e) {
+      console.error("Error initialising the election smart contract");
+      throw new Error(e);
+    }
   }
 
   /**
    * Request the wallet authorisation
    */
-  requestWalletAuthorisation() {
-    return new Promise((resolve, reject) => {
-      // Request the Web3 wallet authorization
-      this.web3.eth
-        .requestAccounts()
-        .then((wallets: string[]) => {
-          if (wallets.length > 0) {
-            // Return the first wallet retreived
-            return resolve(wallets[0]);
-          } else {
-            return reject("No account linked to the MetaMask authorisation");
-          }
-        })
-        .catch(error => {
-          return reject("Account authorisation declined : " + error);
-        });
-    });
+  async requestWalletAuthorisation(): Promise<string> {
+    try {
+      // request the authorisation
+      const wallets = await this.web3.eth.requestAccounts();
+
+      if (wallets.length > 0) {
+        // Return the first wallet retreived
+        return wallets[0];
+      } else {
+        throw new Error("No account linked to the MetaMask authorisation");
+      }
+    } catch (e) {
+      console.error("Error when requesting wallet authorisation");
+      throw new Error(e);
+    }
   }
 
   /**
-   * function used to check if the current user is the chairpersonn of the election
+   * Get all the infos about the current wallet for this election
    */
-  async isThechairpersonMe() : Promise<Boolean> {
+  async whoAmI(): Promise<Voter> {
     try {
       // Authorize wallet and init contract
       const wallet = await this.requestWalletAuthorisation();
       const electionContract = await this.initElectionContract();
 
+      // Fnd the contract voter
+      const contractVoter = await electionContract.methods
+        .voters(wallet)
+        .call({ from: wallet });
+
+      // Find the chairperson
       const chairperson = await electionContract.methods
         .chairperson()
         .call({ from: wallet });
 
-      // Return the canidate list
-      return chairperson == wallet;
+      // Find the balance
+      const rawBalance = await this.web3.eth.getBalance(wallet);
+      const ethBalance = parseInt(rawBalance, 10) / 1000000000000000000;
+
+      // Return the voter object created
+      return new Voter(
+        wallet,
+        ethBalance,
+        contractVoter.voted,
+        contractVoter.delegate,
+        chairperson == wallet,
+        contractVoter.weight,
+        contractVoter.isValue
+      );
     } catch (e) {
-      console.log("Error when checking the chairpersonn");
+      console.error("Error when checking the chairpersonn");
+      throw new Error(e);
+    }
+  }
+
+  /**
+   * function used to add an address to the election
+   */
+  async participateToElection() {
+    try {
+      // Authorize wallet and init contract
+      const wallet = await this.requestWalletAuthorisation();
+      const electionContract = await this.initElectionContract();
+
+      // Add the current wallet to the election
+      const chairperson = await electionContract.methods
+        .participateToElection()
+        .send({ from: wallet });
+    } catch (e) {
+      console.error("Error when adding the current person to the election");
       throw new Error(e);
     }
   }
@@ -89,7 +128,7 @@ export class ContractService {
   /**
    * Function used to retrieve the canidates of the election
    */
-  async getCandidates() : Promise<Array<Candidate>> {
+  async getCandidates(): Promise<Array<Candidate>> {
     try {
       // Authorize wallet and init contract
       const wallet = await this.requestWalletAuthorisation();
@@ -119,7 +158,7 @@ export class ContractService {
       // Return the canidate list
       return candidates;
     } catch (e) {
-      console.log("Error when fetching the candidates");
+      console.error("Error when fetching the candidates");
       throw new Error(e);
     }
   }
@@ -138,7 +177,7 @@ export class ContractService {
       await electionContract.methods.vote(candidateId).send({ from: wallet });
       console.log("Voted for candidate with id : %s", candidateId);
     } catch (e) {
-      console.log("Error when fetching the candidates");
+      console.error("Error when fetching the candidates");
       throw new Error(e);
     }
   }
@@ -207,7 +246,7 @@ export class ContractService {
    * Fetch the end date of the election
    * @param endDate
    */
-  async getEndDate() : Promise<Date> {
+  async getEndDate(): Promise<Date> {
     try {
       // Authorize wallet and init contract
       const wallet = await this.requestWalletAuthorisation();
@@ -218,8 +257,8 @@ export class ContractService {
         .getEndDate()
         .call({ from: wallet });
 
-        // Return the parsed end date
-        return new Date(endDateTimestamp * 1000)
+      // Return the parsed end date
+      return new Date(endDateTimestamp * 1000);
     } catch (e) {
       console.error("Error when updating the end date of the election");
       throw new Error(e);
@@ -232,5 +271,17 @@ export class Candidate {
     public id: number,
     public name: string,
     public voteCount: number
+  ) {}
+}
+
+export class Voter {
+  constructor(
+    public address: string,
+    public balance: number,
+    public voted: boolean,
+    public delegate: string,
+    public isChairperson: boolean,
+    public voteWeight: number,
+    public participatingToElection: boolean
   ) {}
 }

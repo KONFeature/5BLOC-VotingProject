@@ -63,6 +63,17 @@ contract MonkeyElection {
         addCandidate("Sad Monkey");
         addCandidate("Happy Monkey");
         addCandidate("Peaceful Monkey");
+
+        // Define the end date in a week after now
+        endDate = block.timestamp + 604800;
+    }
+
+    /**
+	@notice Add the current address to the voter pool
+    @dev This function is using the addVoter method
+	*/
+    function participateToElection() public {
+        addVoter(msg.sender);
     }
 
     /**
@@ -141,37 +152,32 @@ contract MonkeyElection {
             _toWho != msg.sender,
             "You can't delegate your vote to yourself, stupid bastard."
         );
-        // If the voters doesn't exist yet we create it
-        if (!voters[msg.sender].isValue) {
-            addVoter(msg.sender);
-        }
-
-        // Find the original voter
-        Voter storage sender = voters[msg.sender];
-        require(!sender.voted, "You already voted.");
+        require(!voters[msg.sender].voted, "You already voted.");
+        // If the voters  or the delegated voters doesn't we abort this operation
+        require(voters[msg.sender].isValue, "You are not part of this election.");
+        require(voters[_toWho].isValue, "Your delegate person is not a part of this election.");
 
         // Recurcivelly delegate the votes
-        address finalDelegateAddress = _toWho;
-        while (voters[finalDelegateAddress].isValue) {
-            finalDelegateAddress = voters[finalDelegateAddress].delegate;
+        address delegateAddr = _toWho;
+        while (voters[delegateAddr].isValue && voters[delegateAddr].delegate != address(0)) {
+            delegateAddr = voters[delegateAddr].delegate;
 
             // We found a loop in the delegation, not allowed.
             require(
-                finalDelegateAddress != msg.sender,
+                delegateAddr != msg.sender,
                 "Found loop in delegation, aborting."
             );
         }
 
         // Block the user that delegate his vote
-        sender.voted = true;
-        sender.delegate = finalDelegateAddress;
+        voters[msg.sender].voted = true;
+        voters[msg.sender].delegate = delegateAddr;
 
         // Find the person to wich the vote go and increase his weight
-        Voter storage delegate_ = voters[finalDelegateAddress];
-        delegate_.weight += sender.weight;
-        if (delegate_.voted) {
+        voters[delegateAddr].weight += voters[msg.sender].weight;
+        if (voters[delegateAddr].voted) {
             // Increment the vote count of the delegated person if he already vote
-            candidates[delegate_.vote].voteCount += sender.weight;
+            candidates[voters[delegateAddr].vote].voteCount += voters[msg.sender].weight;
         }
     }
 
