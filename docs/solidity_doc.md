@@ -1,9 +1,3 @@
-[Migrations]: #Migrations
-[Migrations-restricted--]: #Migrations-restricted--
-[Migrations-owner-address]: #Migrations-owner-address
-[Migrations-lastCompletedMigration-uint256]: #Migrations-lastCompletedMigration-uint256
-[Migrations-setCompleted-uint256-]: #Migrations-setCompleted-uint256-
-[Migrations-upgrade-address-]: #Migrations-upgrade-address-
 [MonkeyElection]: #MonkeyElection
 [MonkeyElection-chairperson-address]: #MonkeyElection-chairperson-address
 [MonkeyElection-voters-mapping-address----struct-MonkeyElection-Voter-]: #MonkeyElection-voters-mapping-address----struct-MonkeyElection-Voter-
@@ -16,41 +10,6 @@
 [MonkeyElection-delegate-address-]: #MonkeyElection-delegate-address-
 [MonkeyElection-changeEndDate-uint256-]: #MonkeyElection-changeEndDate-uint256-
 [MonkeyElection-getEndDate--]: #MonkeyElection-getEndDate--
-## <span id="Migrations"></span> `Migrations`
-
-
-
-
-
-- [`restricted()`][Migrations-restricted--]
-- [`setCompleted(uint256 completed)`][Migrations-setCompleted-uint256-]
-- [`upgrade(address newAddress)`][Migrations-upgrade-address-]
-
-### <span id="Migrations-restricted--"></span> `restricted()`
-
-
-
-
-
-### <span id="Migrations-setCompleted-uint256-"></span> `setCompleted(uint256 completed)` (public)
-
-Set the migration as completed
-
-
-This function is using the state variable lastCompletedMigration
-@
-
-
-### <span id="Migrations-upgrade-address-"></span> `upgrade(address newAddress)` (public)
-
-Perform an upgrade
-
-
-This function is using the attribute lastCompletedMigration
-@
-
-
-
 
 ## <span id="MonkeyElection"></span> `MonkeyElection`
 
@@ -125,7 +84,3 @@ This function is using the state variable endDate and chairperson
 ### <span id="MonkeyElection-getEndDate--"></span> `getEndDate() → uint256` (public)
 
 Get the end date of this election
-
-
-
-
