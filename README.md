@@ -22,7 +22,7 @@ npm run start
 
 This will launch the UI part of this project
 
-To build the generate the solidity doc:
+To generate the solidity doc:
 
 ```console
 npx solidity-docgen -i .\contracts\ -o .\docs\
