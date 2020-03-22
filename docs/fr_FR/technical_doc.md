@@ -1,10 +1,25 @@
 # Documentation technique
 
+Cette documentation présente le fonctionnement de l'application décentralisée (DApp) `MonkeyVotingDapp`.
+
+- [Stack technique](#stack-technique)
+- [Architecture technique](#architecture-technique)
+  - [Environnement de developpement](#environnement-de-developpement)
+  - [Environnement de test](#environnement-de-test)
+
 ## Stack technique
+
+La stack technique diverge suivant l'environnement d'exécution. Ainsi, pour chaque composant nous distinguerons l'environnement par ces badges:
+
+- ![badge_dev](https://img.shields.io/badge/env-dev-lightgrey?style=flat) environnement de développement
+- ![badge_test](https://img.shields.io/badge/env-test-9cf?style=flat) déploiement sur un réseau de test
+- ![badge_prod](https://img.shields.io/badge/env-prod-blue?style=flat) déploiement sur un réseau de production
 
 ### Truffle
 
-<img align="right" height="100" src="https://camo.githubusercontent.com/7240582453539ece449f39250a2b063427c83375/68747470733a2f2f74727566666c656672616d65776f726b2e636f6d2f696d672f74727566666c652d6c6f676f2d6461726b2e737667">
+<img align="right" height="50" src="https://camo.githubusercontent.com/7240582453539ece449f39250a2b063427c83375/68747470733a2f2f74727566666c656672616d65776f726b2e636f6d2f696d672f74727566666c652d6c6f676f2d6461726b2e737667">
+
+![badge_dev](https://img.shields.io/badge/env-dev-lightgrey?style=flat) ![badge_test](https://img.shields.io/badge/env-test-9cf?style=flat) ![badge_prod](https://img.shields.io/badge/env-prod-blue?style=flat)
 
 Ce composant permet le déploiement des contrats solidity sur la blockchain. Pour ce faire, son utilisation conduit à la génération d'une Application Binary Interface (ABI). Cette dernière apporte une façon:
 
@@ -22,9 +37,40 @@ Cet élément est primordial car il nous permet, avec l'aide de web3.js, d'aider
 
 Dans ce projet, la fonction `initElectionContract()` du *contract service* est en charge de ce déploiement.
 
-### web3.js
+### Ganache
 
-<img align="right" height="100" src="https://github.com/ethereum/web3.js/raw/1.x/web3js.jpg">
+<img align="right" height="50" src="https://www.trufflesuite.com/img/ganache-logo-dark.svg">
+
+![badge_dev](https://img.shields.io/badge/env-dev-lightgrey?style=flat)
+
+Ganache offre une blockchain Ethereum personnelle. Il permet ainsi d'avoir un environnement de développement plus souple. Il est possible d'importer le workspace Truffle pour tester notre application sans avoir à la publier sur un vrai réseau décentralisé.
+
+Ce composant apporte également la possibilité de visualiser l'état sur smart contract et l'état des différentes variables au travers d'une interface graphique.
+
+### Geth
+
+<img align="right" height="50" src="https://geth.ethereum.org/static/images/mascot.png">
+
+![badge_test](https://img.shields.io/badge/env-test-9cf?style=flat) ![badge_prod](https://img.shields.io/badge/env-prod-blue?style=flat)
+
+Go Ethereum (Geth) est une implémentation du protocol Ethereum. Il est ainsi possible d'être un noeud dans le réseau Ethereum.
+
+Ce composant est utilisé afin de publier les *smart contracts* sur le réseau Ropsten test net.
+
+Utilisé dans le cadre d'un déploiement vers un réseau de test, Geth offre également la possibilité de publier le blockchain sur un réseau principal.
+
+### Swarm
+
+<img align="right" height="50" src="https://d1mjtvp3d1g20r.cloudfront.net/2020/01/10110746/swarm-eth-1004x1024.jpg">
+
+![badge_test](https://img.shields.io/badge/env-test-9cf?style=flat) ![badge_prod](https://img.shields.io/badge/env-prod-blue?style=flat)
+
+Swarm est une plateforme de stockage distribuée. Ce composant est utilisé afin de stocker la webapp sur la blockchain Ethereum.
+
+### web3.js
+<img align="right" height="50" src="https://github.com/ethereum/web3.js/raw/1.x/web3js.jpg">
+
+![badge_dev](https://img.shields.io/badge/env-dev-lightgrey?style=flat) ![badge_test](https://img.shields.io/badge/env-test-9cf?style=flat) ![badge_prod](https://img.shields.io/badge/env-prod-blue?style=flat)
 
 Cette collection de librairies Javascript permet l'interaction avec le contrat.
 
@@ -36,19 +82,41 @@ web3.js assure également la gestion des autorisation pour les transactions avec
 
 ### MetaMask
 
-<img align="right" height="100" src="https://tokensinvaders.com/wp-content/uploads/2018/08/metamask-tutoriel.png">
+<img align="right" height="50" src="https://insidebitcoins.com/wp-content/uploads/2019/06/metamask.png">
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim nunc nec magna posuere accumsan. In blandit, erat in molestie facilisis, mauris dolor imperdiet elit, non iaculis turpis purus eget erat. Nulla rutrum felis ac ullamcorper eleifend. Nunc nec interdum libero. Nunc quis lacus odio. Aliquam pulvinar vitae risus et facilisis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce semper et felis vitae semper. Suspendisse ultrices, est sit amet viverra accumsan, nisl mauris pulvinar lectus, quis pulvinar lectus ante a mi. Donec non libero augue. Proin euismod tellus dui, suscipit euismod augue sollicitudin sit amet. Vivamus lorem ipsum, iaculis nec mauris eget, semper feugiat quam. Duis lobortis ante a nulla ornare accumsan.
+![badge_dev](https://img.shields.io/badge/env-dev-lightgrey?style=flat)
+
+MetaMask est un wallet Ethereum. Dans ce projet, il est utilisé en développement afin d'accéder à la Daap au travers de plusieurs identitées. Ce composant permet de tester le vote avec des comptes différents.
+
+### Solidity
+
+<img align="right" height="50" src="https://solidity.readthedocs.io/en/v0.6.4/_images/logo.svg">
+
+![badge_dev](https://img.shields.io/badge/env-dev-lightgrey?style=flat) ![badge_test](https://img.shields.io/badge/env-test-9cf?style=flat) ![badge_prod](https://img.shields.io/badge/env-prod-blue?style=flat)
+
+Le langage Solidity est utilisé afin de créér le *smart contract*.
 
 ### Angular
 
-<img align="right" height="100" src="https://angular.io/assets/images/logos/angular/angular.png">
+<img align="right" height="50" src="https://angular.io/assets/images/logos/angular/angular.png">
 
-Angular est utilisé pour le front-end. Son adhérence au TypeScript permet de bénéficier de toutes les qualités liées à ce langage.
+![badge_dev](https://img.shields.io/badge/env-dev-lightgrey?style=flat) ![badge_test](https://img.shields.io/badge/env-test-9cf?style=flat) ![badge_prod](https://img.shields.io/badge/env-prod-blue?style=flat)
 
-## Architecture logicielle
+Angular est utilisé pour créér la webapp. Son adhérence au TypeScript permet de bénéficier de toutes les qualités liées à ce langage. C'est une excellente solution pour réaliser du frontend.
 
-<!-- To Do
+## Architecture technique
+
+### Environnement de developpement
+
+[![](https://mermaid.ink/img/eyJjb2RlIjoiZ3JhcGggVERcblxuICB0cnVmZmxlW1RydWZmbGVdXG4gIGdhbmFjaGVbR2FuYWNoZSBtb2NrZWQgYmxvY2tjaGFpbl1cbiAgd2ViM1t3ZWIzLmpzIGxpYnJhaXJpZV1cbiAgbWV0YW1hc2tbTWV0YU1hc2tdXG4gIHNvbGlkaXR5W1NvbGlkaXR5IHNtYXJ0IGNvbnRyYWN0XVxuICBhbmd1bGFyW0FuZ3VsYXIgZnJvbnRlbmRdXG5cblx0c3ViZ3JhcGggRGV2IGVudmlyb25tZW50XG5cdHRydWZmbGVcblxuXHRzdWJncmFwaCBXZWJhcHBcblx0XHRhbmd1bGFyXG5cdFx0d2ViM1xuXHRlbmRcblxuXHRzdWJncmFwaCBFdGhlcmV1bSBlbnZpcm9ubWVudFxuXHRcdGdhbmFjaGVcblx0XHRtZXRhbWFza1xuXHRcdHNvbGlkaXR5XG5cdGVuZFxuXG5cdGFuZ3VsYXIgLS0gR2V0IHNtYXJ0IGNvbnRyYWN0IGRhdGEgZnJvbSAtLT4gd2ViM1xuXHR3ZWIzIC0tIHB1bGwgZGF0YSBmcm9tIC0tPiBnYW5hY2hlXG5cdGFuZ3VsYXIgLS4tICBtZXRhbWFza1xuXHR0cnVmZmxlIC0tIDEtIHB1Ymxpc2guLiAtLT4gc29saWRpdHlcblx0c29saWRpdHkgLS0gMi0gLi5vbiAtLT4gZ2FuYWNoZVxuXHRtZXRhbWFzayAtLSBtYWtlIHRyYW5zYWN0aW9uIG9uIC0tPiBnYW5hY2hlXG5lbmQiLCJtZXJtYWlkIjp7InRoZW1lIjoiZGVmYXVsdCJ9LCJ1cGRhdGVFZGl0b3IiOmZhbHNlfQ)](https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoiZ3JhcGggVERcblxuICB0cnVmZmxlW1RydWZmbGVdXG4gIGdhbmFjaGVbR2FuYWNoZSBtb2NrZWQgYmxvY2tjaGFpbl1cbiAgd2ViM1t3ZWIzLmpzIGxpYnJhaXJpZV1cbiAgbWV0YW1hc2tbTWV0YU1hc2tdXG4gIHNvbGlkaXR5W1NvbGlkaXR5IHNtYXJ0IGNvbnRyYWN0XVxuICBhbmd1bGFyW0FuZ3VsYXIgZnJvbnRlbmRdXG5cblx0c3ViZ3JhcGggRGV2IGVudmlyb25tZW50XG5cdHRydWZmbGVcblxuXHRzdWJncmFwaCBXZWJhcHBcblx0XHRhbmd1bGFyXG5cdFx0d2ViM1xuXHRlbmRcblxuXHRzdWJncmFwaCBFdGhlcmV1bSBlbnZpcm9ubWVudFxuXHRcdGdhbmFjaGVcblx0XHRtZXRhbWFza1xuXHRcdHNvbGlkaXR5XG5cdGVuZFxuXG5cdGFuZ3VsYXIgLS0gR2V0IHNtYXJ0IGNvbnRyYWN0IGRhdGEgZnJvbSAtLT4gd2ViM1xuXHR3ZWIzIC0tIHB1bGwgZGF0YSBmcm9tIC0tPiBnYW5hY2hlXG5cdGFuZ3VsYXIgLS4tICBtZXRhbWFza1xuXHR0cnVmZmxlIC0tIDEtIHB1Ymxpc2guLiAtLT4gc29saWRpdHlcblx0c29saWRpdHkgLS0gMi0gLi5vbiAtLT4gZ2FuYWNoZVxuXHRtZXRhbWFzayAtLSBtYWtlIHRyYW5zYWN0aW9uIG9uIC0tPiBnYW5hY2hlXG5lbmQiLCJtZXJtYWlkIjp7InRoZW1lIjoiZGVmYXVsdCJ9LCJ1cGRhdGVFZGl0b3IiOmZhbHNlfQ)
+
+### Environnement de test
+
+[![](https://mermaid.ink/img/eyJjb2RlIjoiZ3JhcGggVERcbiAgdHJ1ZmZsZVtUcnVmZmxlXVxuICB3ZWIzW3dlYjMuanMgbGlicmFpcmllXVxuICBhbmd1bGFyW0FuZ3VsYXIgZnJvbnRlbmRdXG4gIHNvbGlkaXR5W1NvbGlkaXR5IHNtYXJ0IGNvbnRyYWN0XVxuICBibG9ja2NoYWluW1Rlc3RuZXQgYmxvY2tjaGFpbl1cblxuICBzdWJncmFwaCBEZXYgZW52aXJvbm1lbnRcbiAgICB0cnVmZmxlXG4gIGVuZFxuXG4gIHN1YmdyYXBoIEV0aGVyZXVtIHRlc3QgZW52aXJvbm1lbnRcbiAgICBzdWJncmFwaCBXZWJhcHAgaG9zdGVkIGluIHN3YXJtXG4gICAgICBhbmd1bGFyXG4gICAgICB3ZWIzXG4gICAgZW5kXG5cbiAgICBzdWJncmFwaCBHZXRoIHRlc3RuZXRcbiAgICAgIHNvbGlkaXR5XG4gICAgICBibG9ja2NoYWluXG4gICAgZW5kXG5cbiAgZW5kXG5cbiAgYW5ndWxhciAtLSBHZXQgc21hcnQgY29udHJhY3QgZGF0YSBmcm9tIC0tPiB3ZWIzXG4gIHdlYjMgLS0gcHVsbCBkYXRhIGZyb20gLS0-IGJsb2NrY2hhaW5cbiAgdHJ1ZmZsZSAtLSAxLSBwdWJsaXNoLi4gLS0-IHNvbGlkaXR5XG4gIHNvbGlkaXR5IC0tIDItIC4ub24gLS0-IGJsb2NrY2hhaW5cbiAgdHJ1ZmZsZSAtLSAxLSBwdWJsaXNoLi4gLS0-IGFuZ3VsYXIiLCJtZXJtYWlkIjp7InRoZW1lIjoiZGVmYXVsdCJ9LCJ1cGRhdGVFZGl0b3IiOmZhbHNlfQ)](https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoiZ3JhcGggVERcbiAgdHJ1ZmZsZVtUcnVmZmxlXVxuICB3ZWIzW3dlYjMuanMgbGlicmFpcmllXVxuICBhbmd1bGFyW0FuZ3VsYXIgZnJvbnRlbmRdXG4gIHNvbGlkaXR5W1NvbGlkaXR5IHNtYXJ0IGNvbnRyYWN0XVxuICBibG9ja2NoYWluW1Rlc3RuZXQgYmxvY2tjaGFpbl1cblxuICBzdWJncmFwaCBEZXYgZW52aXJvbm1lbnRcbiAgICB0cnVmZmxlXG4gIGVuZFxuXG4gIHN1YmdyYXBoIEV0aGVyZXVtIHRlc3QgZW52aXJvbm1lbnRcbiAgICBzdWJncmFwaCBXZWJhcHAgaG9zdGVkIGluIHN3YXJtXG4gICAgICBhbmd1bGFyXG4gICAgICB3ZWIzXG4gICAgZW5kXG5cbiAgICBzdWJncmFwaCBHZXRoIHRlc3RuZXRcbiAgICAgIHNvbGlkaXR5XG4gICAgICBibG9ja2NoYWluXG4gICAgZW5kXG5cbiAgZW5kXG5cbiAgYW5ndWxhciAtLSBHZXQgc21hcnQgY29udHJhY3QgZGF0YSBmcm9tIC0tPiB3ZWIzXG4gIHdlYjMgLS0gcHVsbCBkYXRhIGZyb20gLS0-IGJsb2NrY2hhaW5cbiAgdHJ1ZmZsZSAtLSAxLSBwdWJsaXNoLi4gLS0-IHNvbGlkaXR5XG4gIHNvbGlkaXR5IC0tIDItIC4ub24gLS0-IGJsb2NrY2hhaW5cbiAgdHJ1ZmZsZSAtLSAxLSBwdWJsaXNoLi4gLS0-IGFuZ3VsYXIiLCJtZXJtYWlkIjp7InRoZW1lIjoiZGVmYXVsdCJ9LCJ1cGRhdGVFZGl0b3IiOmZhbHNlfQ)
+
+<!--## Architecture logicielle
+
+ To Do
 ## Service used
 
  - web3.service.ts
