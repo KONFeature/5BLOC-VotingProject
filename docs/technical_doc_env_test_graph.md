@@ -4,7 +4,7 @@ graph TD
   web3[web3.js librairie]
   angular[Angular frontend]
   solidity[Solidity smart contract]
-  blockchain[Testnet blockchain]
+  blockchain[Goerli blockchain]
 
   subgraph Dev environment
     truffle
@@ -16,7 +16,7 @@ graph TD
       web3
     end
 
-    subgraph Geth testnet
+    subgraph Geth goerli
       solidity
       blockchain
     end

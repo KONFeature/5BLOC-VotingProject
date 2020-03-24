@@ -38,8 +38,8 @@ export class ContractService {
 
       // Create the contract with the founded address
       return new this.web3.eth.Contract(electionAbi.abi, address, {
-        gasPrice: "20000000000",
-        gas: 10000000
+        gasPrice: "2000000000",
+        gas: 8000000
       });
     } catch (e) {
       console.error("Error initialising the election smart contract");

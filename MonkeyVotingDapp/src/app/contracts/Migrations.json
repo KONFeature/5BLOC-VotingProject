@@ -1378,6 +1378,12 @@
     "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
   },
   "networks": {
+    "5": {
+      "events": {},
+      "links": {},
+      "address": "0xC1A5B1864402a9681cF4b360fe2144969809974e",
+      "transactionHash": "0x9f72d643f032aeb15f74ed5d5d40fd475ec382b98ad7a58e275c435235c69f7d"
+    },
     "5777": {
       "events": {},
       "links": {},
@@ -1398,7 +1404,7 @@
     }
   },
   "schemaVersion": "3.0.23",
-  "updatedAt": "2020-03-19T12:44:17.577Z",
+  "updatedAt": "2020-03-24T17:06:26.283Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Quentin Nivelais",

@@ -4,23 +4,16 @@ Project for the 5BLOC at supinfo
 
 ## Launch
 
-Launch your Ganache server
-
-When ganache is ready, in a terminal execute
-
-```console
-truffle compile && truffle migrate
-```
-
-This will put all of our contracts in the ganache blockchain
-
-Then, go in the app folder and run
+Go in the MonkeyVotingDapp folder and run
 
 ```language
-npm run start
+ng serve
 ```
 
-This will launch the UI part of this project
+This will launch the UI part of this project.
+
+After that, choose "Goerli testnet" in metamask, and go on [http://localhost:4200/](http://localhost:4200/). The UI will purpose you to join the election.
+If you don't have an account on the goerli testnet, I reccomand you to follow the geth_setup documentation.
 
 To generate the solidity doc:
 
