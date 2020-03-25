@@ -61,59 +61,36 @@ Se référer à la section *Installing MetaMask de cette [documentation](https:/
 
 #### Installation initiale
 
-Dans un terminal, taper la commande `geth --testnet account new` afin de créér un compte dans le réseau de test
+Dans un terminal, taper la commande `geth --goerli account new` afin de créer un compte dans le réseau de test.
 
-L'addresse de compte sera affichée dans la console. Il faut la conserver.
+Afin d'obtenir des `eth` pour nos tests, il faut utiliser le site [https://goerli-faucet.slock.it/](https://goerli-faucet.slock.it/) et taper l'addresse précédemment obtenue dans le champ associé.
 
-Il faut ensuite démarrer la synchronisation avec la commande suivante:
+Après avoir obtenu des `eth` sur le compte goerli, il faut l'importer dans MetaMask. Pour ce faire, il faut ouvrir l'extension et choisir le réseau `Goerli testnet`. Cliquer ensuite sur `import account`, `choose from JSON file`, et choisir le fichier généré par geth avec la commande précédente. Enfin, entrer la passphrase utilisée à la création du compte.
 
-```console
-geth --testnet --syncmode fast --cache 1024 --rpc --rpcapi eth,net,web3,personal
+#### Upload du contrat sur le réseau Goerli testnet
+
+Il faut créér un compte sur [https://infura.io/](https://infura.io/). Un accès à un wallet et à un call API pour communiquer avec Goerli sera mis à disposition. Inufra est la méthode préférée pour communiquer avec la blockchain Ehthereum (en février 2019, 63% des Dapps étaient postées dans ce réseau).
+
+Une fois le compte obtenu, il faut créér un fichier `.env` avec votre `MNEMONIC` et votre clé d'API.
+
+```ini
+MNEMONIC="some word that compose your mnemonic"
+INFURA_API_KEY="xxxx"
 ```
-
-La synchronisation va se dérouler en arrière plan.
-
-Afin d'otbenir des `eth` pour nos tests, il faut utiliser le site [https://faucet.ropsten.be/](https://faucet.ropsten.be/) et taper l'addresse précédemment obtenue dans le champ associé.
-
-#### Interaction avec le serveur Geth
-
-Dans un nouveau terminal, taper la commande:
-
-```console
-geth attach http://127.0.0.1:8545
-```
-
-Un nouveau prompt Javascript sera affiché. Y taper la commande:
-
-```js
-eth.syncing
-```
-
-Si cette commande ne retourne pas `false`, c'est que la synchronisation est toujours en cours. Il faut attendre que la synchronisation soit terminée, et relancer la commande ultérieurement.
-
-Une fois la synchronisation terminée, il faut déverouiller le compte avec la commande:
-
-```js
-personal.unlockAccount(eth.accounts[0])
-```
-
-Y taper la passphrase utilisée pour créér le compte.
 
 #### Réaliser la migration Truffle
 
 Dans un nouveau terminal, exécuter la commande:
 
 ```console
-truffle migrate --network ropsten
+truffle migrate --network goerli
 ```
 
-La migration va débuter et va déployer les contrats sur le réseau Ropsten. Quand elle sera terminée, l'addresse associée au contrat devra être conservée.
-
-Cette addresse sera utilisée depuis notre Dapp.
+La migration va débuter et va déployer les contrats sur le réseau Goerli. Quand elle sera terminée, l'addresse associée au contrat devra sera sauvegardée dans le fichier ABI, et la MonkeyElectionDapps trouvera l'addresse correcte correspondant au réseau choisi dans MetaMask.
 
 #### Configuration de Swarm
 
-Afin de déployer la webapp sur la blockchain, il faut utiliser Swarm. Dans un terminal, exécuter la commande suivante en remplaçant `<ACCOUNT>` par l'addresse lors de la création du compte dans le réseau Ropsten:
+Afin de déployer la webapp sur la blockchain, il faut utiliser Swarm. Dans un terminal, exécuter la commande suivante en remplaçant `<ACCOUNT>` par l'addresse lors de la création du compte dans le réseau Goerli:
 
 ```console
 swarm --ens-api "" --bzzaccount <ACCOUNT>
